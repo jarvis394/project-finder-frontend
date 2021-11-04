@@ -1,0 +1,47 @@
+{
+  "name": "my-app",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.5.0",
+    "@emotion/react": "^11.5.0",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@mui/material": "^5.0.6",
+    "axios": "^0.24.0",
+    "next": "12.0.2",
+    "next-pwa": "^5.4.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^12.0.2",
+    "@types/node": "16.11.6",
+    "@types/react": "17.0.34",
+    "@typescript-eslint/parser": "^5.3.0",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.2",
+    "eslint-plugin-react": "^7.26.1",
+    "typescript": "4.4.4"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

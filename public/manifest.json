@@ -1,0 +1,16 @@
+{
+  "short_name": "Project Finder",
+  "name": "Project Finder - Tinder for business",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "256x256"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "scope": "/",
+  "background_color": "#000000",
+  "splash_pages": null
+}
