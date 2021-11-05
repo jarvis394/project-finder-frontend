@@ -60,6 +60,7 @@
     ],
     "no-unused-vars": "off",
     "react/prop-types": "off",
+    "react/display-name": "off",
     "camelcase": "off",
     "import/no-anonymous-default-export": "off",
     "@typescript-eslint/camelcase": "off",
