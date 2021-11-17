@@ -1,5 +1,5 @@
 import React from 'react'
-import { Paper, Typography } from '@mui/material'
+import { Button, Paper, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
@@ -12,6 +12,7 @@ const Home: NextPage = () => {
       >
         Project Finder – like Tinder, but for business
       </Typography>
+      <Button variant="contained" fullWidth>asd</Button>
     </Paper>
   )
 }

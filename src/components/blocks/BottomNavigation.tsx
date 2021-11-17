@@ -31,12 +31,23 @@ const BottomNavigationMaterialAction = styled(
   fontWeight: 500,
   padding: '4px 12px 3px !important',
   color: alpha(theme.palette.text.primary, 0.39),
+  transitionDuration: '0.2s !important',
+  transitionDelay: '0.1s',
+  transitionProperty: 'all',
   '&.Mui-selected': {
+    transitionDelay: '0s',
     color: theme.palette.primary.main,
+  },
+  '&.Mui-selected:active': {
+    color: alpha(theme.palette.primary.main, 0.7)
   },
   '&.Mui-selected > .label': {
     fontSize: '12px !important',
   },
+  '&:active': {
+    color: alpha(theme.palette.text.primary, 0.26),
+    transform: 'scale(0.9)'
+  }
 }))
 const BottomNavigationActionRoot = styled('div')({
   width: 50,
@@ -97,6 +108,7 @@ const BottomNavigation = () => {
           {bottomNavigationTabs.map((e, i) => (
             <BottomNavigationMaterialAction
               key={i}
+              disableRipple
               classes={{ label: 'label' }}
               label={e.label}
               icon={
