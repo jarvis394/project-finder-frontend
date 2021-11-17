@@ -39,15 +39,18 @@ const BottomNavigationMaterialAction = styled(
     color: theme.palette.primary.main,
   },
   '&.Mui-selected:active': {
-    color: alpha(theme.palette.primary.main, 0.7)
+    color: alpha(theme.palette.primary.main, 0.7),
   },
   '&.Mui-selected > .label': {
     fontSize: '12px !important',
   },
+  '& .label': {
+    fontFamily: 'Google Sans !important',
+  },
   '&:active': {
     color: alpha(theme.palette.text.primary, 0.26),
-    transform: 'scale(0.9)'
-  }
+    transform: 'scale(0.9)',
+  },
 }))
 const BottomNavigationActionRoot = styled('div')({
   width: 50,
@@ -55,7 +58,7 @@ const BottomNavigationActionRoot = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
   position: 'relative',
-  marginBottom: 3,
+  marginBottom: 2,
 })
 const BottomNavigationActionBackdrop = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -117,10 +120,6 @@ const BottomNavigation = () => {
                   icon={e.icon}
                 />
               }
-              sx={{
-                fontFamily: 'Google Sans',
-                fontSize: 12,
-              }}
               // onClick={() => go(e)}
             />
           ))}
