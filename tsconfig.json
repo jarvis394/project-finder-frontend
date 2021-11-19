@@ -11,7 +11,7 @@
     ],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "rootDir": "./",
     "forceConsistentCasingInFileNames": true,
@@ -32,8 +32,7 @@
     "incremental": true
   },
   "include": [
-    "src",
-    "pages"
+    "src"
   ],
   "exclude": [
     "node_modules"

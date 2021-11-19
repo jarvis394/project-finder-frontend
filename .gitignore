@@ -8,10 +8,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
 
@@ -35,8 +31,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-
-# service-worker build
-public/sw.js*
-public/workbox*
-public/worker*

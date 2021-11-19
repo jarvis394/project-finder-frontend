@@ -1,7 +1,6 @@
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider, styled } from '@mui/material/styles'
 import isMobile from 'is-mobile'
-import { DocumentAppProps } from 'pages/_app'
 import React from 'react'
 import {
   CHROME_ADDRESS_BAR_HEIGHT,
@@ -10,6 +9,8 @@ import {
 } from 'src/config/constants'
 import theme from 'src/styles/theme'
 import BottomNavigation from 'src/components/blocks/BottomNavigation'
+import { useRoutes } from 'react-router-dom'
+import { routes } from 'src/config/routes'
 
 const Root = styled('div')({
   display: 'flex',
@@ -25,13 +26,13 @@ const Root = styled('div')({
   boxSizing: 'border-box',
 })
 
-const App: React.FC<DocumentAppProps> = ({ Component, pageProps }) => {
+const App: React.FC = () => {
+  const Component = useRoutes(routes)
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Root>
-        <Component {...pageProps} />
-      </Root>
+      <Root>{Component}</Root>
       <BottomNavigation />
     </ThemeProvider>
   )

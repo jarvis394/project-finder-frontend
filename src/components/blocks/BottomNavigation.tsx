@@ -7,6 +7,8 @@ import { alpha, styled } from '@mui/material/styles'
 import React, { useState } from 'react'
 import bottomNavigationTabs from 'src/config/bottomNavigationTabs'
 import { BOTTOM_BAR_HEIGHT } from 'src/config/constants'
+import { useNavigate } from 'react-router-dom'
+import { useRoute } from 'src/hooks'
 
 const Offset = styled('div')({ height: BOTTOM_BAR_HEIGHT })
 const BottomNavigationPaper = styled(Paper)(({ theme }) => ({
@@ -92,13 +94,20 @@ const BottomNavigationActionIcon = React.memo(
 )
 
 const BottomNavigation = () => {
+  const route = useRoute()
   const [value, setValue] = useState<number>(0)
+  const navigate = useNavigate()
   const handleChange = (
     _event: React.ChangeEvent<unknown>,
     newValue: number
   ) => {
-    setValue(newValue)
+    if (newValue !== value) {
+      setValue(newValue)
+      navigate(bottomNavigationTabs[newValue].to)
+    }
   }
+
+  if (route.shouldHideInterface) return null
 
   return (
     <>
@@ -120,7 +129,6 @@ const BottomNavigation = () => {
                   icon={e.icon}
                 />
               }
-              // onClick={() => go(e)}
             />
           ))}
         </BottomNavigationMaterial>
