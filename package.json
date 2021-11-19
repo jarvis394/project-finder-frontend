@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.6.0",
     "@mui/material": "^5.1.1",
     "@vkontakte/icons": "^1.134.0",
+    "framer-motion": "^5.3.0",
     "is-mobile": "^3.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -19,9 +20,9 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -45,8 +46,10 @@
     "@types/node": "^16.11.8",
     "@types/react": "^17.0.35",
     "@types/react-dom": "^17.0.11",
+    "customize-cra": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.27.0",
-    "project-finder-backend-types": "^1.1.0"
+    "project-finder-backend-types": "^1.1.0",
+    "react-app-rewired": "^2.1.8"
   }
 }

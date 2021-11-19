@@ -34,7 +34,7 @@ const BottomNavigationMaterialAction = styled(
   padding: '4px 12px 3px !important',
   color: alpha(theme.palette.text.primary, 0.39),
   transitionDuration: '0.2s !important',
-  transitionDelay: '0.1s',
+  transitionDelay: '0.05s',
   transitionProperty: 'all',
   '&.Mui-selected': {
     transitionDelay: '0s',
