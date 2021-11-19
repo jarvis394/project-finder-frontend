@@ -40,5 +40,11 @@ export const routes: Route[] = [
     title: 'Уведомления',
     shouldHideInterface: false,
     alias: 'notifications',
+  },
+  {
+    path: '/',
+    element: <>Home</>,
+    shouldHideInterface: false,
+    alias: 'root'
   }
 ]

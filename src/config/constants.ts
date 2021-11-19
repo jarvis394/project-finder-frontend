@@ -9,3 +9,5 @@ export const CHROME_ADDRESS_BAR_HEIGHT = 56
 export const APP_MAX_WIDTH = 1000
 
 export const MIN_SWIPE_WIDTH = 128
+export const CIRCLE_WIDTH = 96
+export const CIRCLE_ANIMATION_SCALE = 1.3

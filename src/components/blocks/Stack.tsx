@@ -1,60 +1,48 @@
-import React, { useState, Children, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   useMotionValue,
   useAnimation,
   MotionValue,
-  motion,
   AnimatePresence,
   motionValue,
   Variants,
   animationControls,
 } from 'framer-motion'
 import Card from './Card'
-import { styled } from '@mui/material'
-import { MIN_SWIPE_WIDTH } from 'src/config/constants'
+import {
+  MIN_SWIPE_WIDTH,
+  CIRCLE_WIDTH,
+  CIRCLE_ANIMATION_SCALE,
+} from 'src/config/constants'
+import Circle from './Circle'
 
 interface StackProps {
   onTransformChange: (x: MotionValue<number>) => void
   onVote: (vote: boolean) => void
+  items: unknown[]
 }
 
-const LikeCircle = styled(motion.div)`
-  position: absolute;
-  z-index: 1000;
-  left: -48px;
-  font-size: 48px;
-  height: calc(100vh - 56px);
-  display: flex;
-  align-items: center;
-`
-const RejectCircle = styled(motion.div)`
-  position: absolute;
-  z-index: 1000;
-  font-size: 48px;
-  right: -48px;
-  height: calc(100vh - 56px);
-  display: flex;
-  align-items: center;
-`
-
 const variants: Variants = {
-  enter: (direction: boolean) => ({
-    // x: direction ? -500 : 500,
-    scale: 0.7,
+  enter: {
+    scale: 0.95,
     opacity: 0,
-  }),
+    y: 8,
+    transformOrigin: 'bottom',
+  },
   center: {
     x: 0,
     scale: 1,
     opacity: 1,
+    y: 0,
+    transformOrigin: 'bottom',
     transition: {
       bounce: false,
       ease: 'easeOut',
-      delay: 0.25,
+      delay: 0,
     },
   },
   exit: (direction: boolean) => ({
-    x: direction ? 500 : -500,
+    x: direction ? 700 : -700,
     opacity: 0,
     transition: {
       bounce: false,
@@ -62,16 +50,11 @@ const variants: Variants = {
   }),
 }
 
-const Stack: React.FC<StackProps> = ({
-  onTransformChange,
-  onVote,
-  children,
-}) => {
-  const items = Children.toArray(children)
+const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
   const likeCircleControls = useAnimation()
   const rejectCircleControls = useAnimation()
-  const likeCircleX = useMotionValue(-48)
-  const rejectCircleX = useMotionValue(-48)
+  const likeCircleX = useMotionValue(-CIRCLE_WIDTH)
+  const rejectCircleX = useMotionValue(-CIRCLE_WIDTH)
   const [isCardShown, setIsCardShown] = useState(true)
   const [doLikeCircleAnimation, setDoLikeCircleAnimation] =
     useState<boolean>(false)
@@ -86,14 +69,23 @@ const Stack: React.FC<StackProps> = ({
   })
   const handleTransformChange = useCallback(
     (x: MotionValue<number>) => {
+      const xValue = x.get()
+      const ratio = MIN_SWIPE_WIDTH / CIRCLE_WIDTH
+      const newLikeCircleX = Math.min(
+        (xValue - CIRCLE_WIDTH) * ratio,
+        MIN_SWIPE_WIDTH - CIRCLE_WIDTH
+      )
+      const newRejectCircleX = Math.min(
+        (-xValue - CIRCLE_WIDTH) * ratio,
+        MIN_SWIPE_WIDTH - CIRCLE_WIDTH
+      )
       isCardShown && onTransformChange(x)
-      likeCircleX.set(Math.min(x.get(), MIN_SWIPE_WIDTH) / 1.1 - 48)
-      rejectCircleX.set(Math.min(-x.get(), MIN_SWIPE_WIDTH) / 1.1 - 48)
+      likeCircleX.set(newLikeCircleX)
+      rejectCircleX.set(newRejectCircleX)
     },
     [isCardShown]
   )
   const showNewItem = () => {
-    console.log('should show item')
     setCurrent((prev) => ({
       x: motionValue(0),
       index: prev.index + 1,
@@ -113,9 +105,9 @@ const Stack: React.FC<StackProps> = ({
   const handleDragEnd = () => {
     const vote = getVote()
     if (vote !== undefined) {
-      onVote(vote)
       setDirection(vote)
       setIsCardShown(false)
+      onVote(vote)
     }
   }
 
@@ -124,10 +116,14 @@ const Stack: React.FC<StackProps> = ({
       handleTransformChange(current.x)
     })
     const unsubscribeLikeX = likeCircleX.onChange(() => {
-      setDoLikeCircleAnimation(likeCircleX.get() >= MIN_SWIPE_WIDTH / 2)
+      setDoLikeCircleAnimation(
+        likeCircleX.get() >= MIN_SWIPE_WIDTH - CIRCLE_WIDTH
+      )
     })
     const unsubscribeRejectX = likeCircleX.onChange(() => {
-      setDoRejectCircleAnimation(rejectCircleX.get() >= MIN_SWIPE_WIDTH / 2)
+      setDoRejectCircleAnimation(
+        rejectCircleX.get() >= MIN_SWIPE_WIDTH - CIRCLE_WIDTH
+      )
     })
     return () => {
       unsubscribeCardX()
@@ -139,7 +135,7 @@ const Stack: React.FC<StackProps> = ({
   useEffect(() => {
     if (doLikeCircleAnimation) {
       likeCircleControls.start({
-        scale: 2,
+        scale: CIRCLE_ANIMATION_SCALE,
       })
     } else {
       likeCircleControls.start({
@@ -151,7 +147,7 @@ const Stack: React.FC<StackProps> = ({
   useEffect(() => {
     if (doRejectCircleAnimation) {
       rejectCircleControls.start({
-        scale: 2,
+        scale: CIRCLE_ANIMATION_SCALE,
       })
     } else {
       rejectCircleControls.start({
@@ -162,29 +158,24 @@ const Stack: React.FC<StackProps> = ({
 
   return (
     <>
-      <AnimatePresence onExitComplete={showNewItem} custom={direction}>
+      <AnimatePresence
+        initial={false}
+        onExitComplete={showNewItem}
+        custom={direction}
+      >
         {isCardShown && (
           <>
-            <LikeCircle
-              animate={likeCircleControls}
-              key="like"
-              style={{ left: likeCircleX }}
-              initial={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
-            >
-              ❤️
-            </LikeCircle>
-
+            <Circle
+              variant="like"
+              circleControls={likeCircleControls}
+              x={likeCircleX}
+            />
             <Card
               style={{ x: current.x, rotate: current.x }}
-              transformTemplate={({ rotate, x }) => {
+              transformTemplate={({ rotate, x, scale, y }) => {
                 return `translateX(${x}) rotate(${
                   Number(rotate.toString().match(/(-?)\d+/)[0]) / 24
-                }deg)`
+                }deg) scale(${scale}) translateY(${y})`
               }}
               key={current.index}
               custom={direction}
@@ -196,20 +187,11 @@ const Stack: React.FC<StackProps> = ({
             >
               {current.element}
             </Card>
-
-            <RejectCircle
-              animate={rejectCircleControls}
-              key="reject"
-              style={{ right: rejectCircleX }}
-              initial={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
-            >
-              ❌
-            </RejectCircle>
+            <Circle
+              variant="reject"
+              circleControls={rejectCircleControls}
+              x={rejectCircleX}
+            />
           </>
         )}
       </AnimatePresence>
