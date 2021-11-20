@@ -21,7 +21,7 @@ const Root = styled('div')({
   alignItems: 'flex-start',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: APP_MAX_WIDTH,
+  // maxWidth: APP_MAX_WIDTH,
   margin: '0 auto env(safe-area-inset-bottom, 0px) auto',
   boxSizing: 'border-box',
 })

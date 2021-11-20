@@ -25,7 +25,7 @@ const Wrapper = styled(motion.div)`
 `
 
 const Projects = () => {
-  const [index, setIndex] = useState(0)
+  const [items, setItems] = useState<string[]>(['1', '2', '3'])
   const x = useMotionValue(0)
   const xConstraints = [-MIN_SWIPE_WIDTH, 0, MIN_SWIPE_WIDTH]
   const background = useTransform(x, xConstraints, [
@@ -38,10 +38,22 @@ const Projects = () => {
   }
   const handleVote = (vote: boolean) => {
     console.log('Got vote:', vote)
-    animate(x, 0)
-    setIndex(prev => prev + 1)
+    animate(x, vote ? MIN_SWIPE_WIDTH : -MIN_SWIPE_WIDTH, {
+      onComplete: () => {
+        animate(x, 0)
+      },
+    })
   }
-  const [items, setItems] = useState<string[]>(['1', '2', '3'])
+  const loadMoreItems = async (endIndex: number) => {
+    console.log('Loading more items from index', endIndex)
+    return new Promise<unknown[]>((resolve) => {
+      setTimeout(
+        () =>
+          resolve(new Array(3).fill(0).map((_, i) => i + endIndex + 1 + '')),
+        1000
+      )
+    })
+  }
 
   return (
     <>
@@ -49,7 +61,8 @@ const Projects = () => {
         <Stack
           onTransformChange={handleTransformChange}
           onVote={handleVote}
-          items={items}
+          loadMoreFunction={loadMoreItems}
+          initialItems={items}
         />
       </Wrapper>
     </>

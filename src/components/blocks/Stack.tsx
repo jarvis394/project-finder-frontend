@@ -15,11 +15,13 @@ import {
   CIRCLE_ANIMATION_SCALE,
 } from 'src/config/constants'
 import Circle from './Circle'
+import { Button, CircularProgress } from '@mui/material'
 
 interface StackProps {
   onTransformChange: (x: MotionValue<number>) => void
   onVote: (vote: boolean) => void
-  items: unknown[]
+  loadMoreFunction: (endIndex: number) => Promise<unknown[]>
+  initialItems: unknown[]
 }
 
 const variants: Variants = {
@@ -50,7 +52,16 @@ const variants: Variants = {
   }),
 }
 
-const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
+const Stack: React.FC<StackProps> = ({
+  onTransformChange,
+  onVote,
+  loadMoreFunction,
+  initialItems,
+}) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [refreshIndex, setRefreshIndex] = useState(0)
+  const [index, setIndex] = useState(0)
+  const [items, setItems] = useState(initialItems)
   const likeCircleControls = useAnimation()
   const rejectCircleControls = useAnimation()
   const likeCircleX = useMotionValue(-CIRCLE_WIDTH)
@@ -67,6 +78,21 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
     element: items[0],
     index: 0,
   })
+
+  // TODO: refactor these
+  const voteLike = () => {
+    if (isLoading) return
+    setIsCardShown(false)
+    setDirection(true)
+    onVote(true)
+  }
+  const voteReject = () => {
+    if (isLoading) return
+    setIsCardShown(false)
+    setDirection(false)
+    onVote(false)
+  }
+
   const handleTransformChange = useCallback(
     (x: MotionValue<number>) => {
       const xValue = x.get()
@@ -85,16 +111,39 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
     },
     [isCardShown]
   )
-  const showNewItem = () => {
-    setCurrent((prev) => ({
-      x: motionValue(0),
-      index: prev.index + 1,
-      element: items[prev.index + 1],
-      controls: animationControls(),
-    }))
-    current.x.set(0)
-    setIsCardShown(true)
-  }
+
+  const showNextItem = useCallback(
+    (index: number) => {
+      console.log('show new item at index:', index)
+
+      // Update current item and global index
+      setRefreshIndex((prev) => prev + 1)
+      setCurrent({
+        x: motionValue(0),
+        index: index,
+        element: items[index],
+        controls: animationControls(),
+      })
+
+      // Reset UI positions
+      current.x.set(0)
+      likeCircleControls.set({
+        left: -CIRCLE_WIDTH - 16,
+        scale: 1,
+        transition: { duration: 0, bounce: false },
+      })
+      rejectCircleControls.set({
+        right: -CIRCLE_WIDTH - 16,
+        scale: 1,
+        transition: { duration: 0, bounce: false },
+      })
+
+      // Display new card
+      setIsCardShown(true)
+    },
+    [items]
+  )
+
   const getVote = () => {
     if (current.x.get() <= -MIN_SWIPE_WIDTH) {
       return false
@@ -102,6 +151,7 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
       return true
     } else return undefined
   }
+
   const handleDragEnd = () => {
     const vote = getVote()
     if (vote !== undefined) {
@@ -111,6 +161,37 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
     }
   }
 
+  const handleAnimationComplete = async (name: string) => {
+    if (name === 'exit') {
+      if (current.index === items.length - 1) {
+        // Start loading skeleton
+        setIsLoading(true)
+
+        // Fetch new items
+        const newItems = await loadMoreFunction(refreshIndex)
+        setItems(newItems)
+        setIndex(0)
+        setIsLoading(false)
+        console.log('set new items', newItems, items)
+      } else {
+        setIndex((prev) => prev + 1)
+      }
+    }
+  }
+
+  useEffect(() => {
+    /**
+     * FIXME: idk why we cannot call showNextItem without
+     * destroying listeners on current.x position
+     *
+     * Here is ugly hack to not to call showNextItem, but add +1
+     * to global index.
+     */
+    if (refreshIndex !== 0) showNextItem(index)
+    else setRefreshIndex(1)
+  }, [index])
+
+  // Subscribe to `motion` components position
   useEffect(() => {
     const unsubscribeCardX = current.x.onChange(() => {
       handleTransformChange(current.x)
@@ -132,6 +213,7 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
     }
   }, [isCardShown])
 
+  // Handle like circle animation when reached swipe distance
   useEffect(() => {
     if (doLikeCircleAnimation) {
       likeCircleControls.start({
@@ -144,6 +226,7 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
     }
   }, [doLikeCircleAnimation])
 
+  // Handle reject circle animation when reached swipe distance
   useEffect(() => {
     if (doRejectCircleAnimation) {
       rejectCircleControls.start({
@@ -158,11 +241,8 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
 
   return (
     <>
-      <AnimatePresence
-        initial={false}
-        onExitComplete={showNewItem}
-        custom={direction}
-      >
+      {isLoading && <CircularProgress color="primary" />}
+      <AnimatePresence initial={false} custom={direction}>
         {isCardShown && (
           <>
             <Circle
@@ -171,8 +251,11 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
               x={likeCircleX}
             />
             <Card
+              onAnimationComplete={handleAnimationComplete}
               style={{ x: current.x, rotate: current.x }}
               transformTemplate={({ rotate, x, scale, y }) => {
+                // Rotate degree is lowered down because it depends
+                // on X value and so it looks nice
                 return `translateX(${x}) rotate(${
                   Number(rotate.toString().match(/(-?)\d+/)[0]) / 24
                 }deg) scale(${scale}) translateY(${y})`
@@ -195,6 +278,22 @@ const Stack: React.FC<StackProps> = ({ onTransformChange, onVote, items }) => {
           </>
         )}
       </AnimatePresence>
+      <Button
+        style={{ position: 'absolute', zIndex: 1000, left: 4, top: 4 }}
+        onClick={voteReject}
+        color="secondary"
+        variant="contained"
+      >
+        vote reject
+      </Button>
+      <Button
+        style={{ position: 'absolute', zIndex: 1000, right: 4, top: 4 }}
+        onClick={voteLike}
+        color="primary"
+        variant="contained"
+      >
+        vote like
+      </Button>
     </>
   )
 }
