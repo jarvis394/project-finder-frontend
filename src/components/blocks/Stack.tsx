@@ -8,7 +8,7 @@ import {
   Variants,
   animationControls,
 } from 'framer-motion'
-import Card from './Card'
+import ProjectCard from './ProjectCard'
 import {
   MIN_SWIPE_WIDTH,
   CIRCLE_WIDTH,
@@ -75,24 +75,27 @@ const Stack: React.FC<StackProps> = ({
   const [current, setCurrent] = useState({
     x: useMotionValue(0),
     controls: useAnimation(),
-    element: items[0],
+    data: items[0],
     index: 0,
   })
 
-  // TODO: refactor these
-  const voteLike = () => {
-    if (isLoading) return
-    setIsCardShown(false)
-    setDirection(true)
-    onVote(true)
+  /** 
+   * We do not need to have any logic in vote function
+   * because it triggers on card animation end, which happens
+   * only when user did a vote
+   */
+  const vote = (v: boolean) => {
+    if (!isLoading) {
+      // Hide card
+      setIsCardShown(false)
+      setDirection(v)
+      onVote(v)
+    } else return undefined
   }
-  const voteReject = () => {
-    if (isLoading) return
-    setIsCardShown(false)
-    setDirection(false)
-    onVote(false)
-  }
+  const voteLike = () => vote(true)
+  const voteReject = () => vote(false)
 
+  /** Function to handle any position updates in layout */
   const handleTransformChange = useCallback(
     (x: MotionValue<number>) => {
       const xValue = x.get()
@@ -121,7 +124,7 @@ const Stack: React.FC<StackProps> = ({
       setCurrent({
         x: motionValue(0),
         index: index,
-        element: items[index],
+        data: items[index],
         controls: animationControls(),
       })
 
@@ -144,6 +147,7 @@ const Stack: React.FC<StackProps> = ({
     [items]
   )
 
+  /** Gets vote based on swipe direction and distance */
   const getVote = () => {
     if (current.x.get() <= -MIN_SWIPE_WIDTH) {
       return false
@@ -161,6 +165,10 @@ const Stack: React.FC<StackProps> = ({
     }
   }
 
+  /** 
+   * Activated only after the card ended exit animation (got swiped away)
+   * Goes to the next card and fetches more if needed 
+   */
   const handleAnimationComplete = async (name: string) => {
     if (name === 'exit') {
       if (current.index === items.length - 1) {
@@ -250,7 +258,7 @@ const Stack: React.FC<StackProps> = ({
               circleControls={likeCircleControls}
               x={likeCircleX}
             />
-            <Card
+            <ProjectCard
               onAnimationComplete={handleAnimationComplete}
               style={{ x: current.x, rotate: current.x }}
               transformTemplate={({ rotate, x, scale, y }) => {
@@ -267,9 +275,8 @@ const Stack: React.FC<StackProps> = ({
               animate="center"
               exit="exit"
               onDragEnd={handleDragEnd}
-            >
-              {current.element}
-            </Card>
+              data={current.data}
+            />
             <Circle
               variant="reject"
               circleControls={rejectCircleControls}

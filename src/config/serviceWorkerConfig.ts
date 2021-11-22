@@ -1,5 +1,5 @@
 import { NEEDS_UPDATE_KEY } from 'src/config/constants'
-import { Config } from 'src/utils/serviceWorker'
+import { Config } from 'src/serviceWorker'
 
 const config: Config = {
   onUpdate: (registration: ServiceWorkerRegistration) => {
@@ -18,6 +18,7 @@ const config: Config = {
           'color: #2979ff;',
           'color: #e9e9e9;'
         )
+        location.reload()
       })
       .catch((e) =>
         console.log(

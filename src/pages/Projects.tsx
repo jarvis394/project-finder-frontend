@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import {
   useTransform,
@@ -8,11 +8,16 @@ import {
   animate,
 } from 'framer-motion'
 import {
+  BOTTOM_BAR_HEIGHT,
   CHROME_ADDRESS_BAR_HEIGHT,
   MIN_SWIPE_WIDTH,
 } from 'src/config/constants'
 import Stack from 'src/components/blocks/Stack'
 import isMobile from 'is-mobile'
+import {
+  ProjectBase,
+  ProjectListSuitableRes,
+} from 'project-finder-backend-types'
 
 const Wrapper = styled(motion.div)`
   position: relative;
@@ -20,12 +25,55 @@ const Wrapper = styled(motion.div)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: calc(100vh - 56px - ${isMobile() ? CHROME_ADDRESS_BAR_HEIGHT : 0}px);
+  height: calc(
+    100vh - ${BOTTOM_BAR_HEIGHT}px -
+      ${isMobile() ? CHROME_ADDRESS_BAR_HEIGHT : 0}px
+  );
   overflow: hidden;
 `
 
+const getRandomProjectData = () => ({
+  title: 'Project Finder',
+  description:
+    'Требуются мобильные разработчики, желательно со стажем коммерческой разработки не менее 80 лет. Обязательно знание PowerPoint.',
+  skillTags: [
+    {
+      name: 'Express',
+    },
+    {
+      name: 'Django',
+    },
+    {
+      name: 'Django',
+    },
+    {
+      name: 'Python',
+    },
+    {
+      name: 'Django',
+    },
+    {
+      name: 'Django',
+    },
+  ],
+  slug: 'project-finder',
+  user: {
+    username: 'jarvis394',
+    name: 'Василий',
+    lastname: 'Пупкин',
+    contact: '@tarnatovski',
+    information:
+      'Разработчик на Excel. Пишу игровые движки в свободное время на LibreOffice.',
+    skillTags: [{ name: 'Excel' }, { name: 'LibreOffice' }],
+  },
+})
+
 const Projects = () => {
-  const [items, setItems] = useState<string[]>(['1', '2', '3'])
+  const [items, setItems] = useState<unknown[]>([
+    getRandomProjectData(),
+    getRandomProjectData(),
+    getRandomProjectData(),
+  ])
   const x = useMotionValue(0)
   const xConstraints = [-MIN_SWIPE_WIDTH, 0, MIN_SWIPE_WIDTH]
   const background = useTransform(x, xConstraints, [
@@ -49,7 +97,7 @@ const Projects = () => {
     return new Promise<unknown[]>((resolve) => {
       setTimeout(
         () =>
-          resolve(new Array(3).fill(0).map((_, i) => i + endIndex + 1 + '')),
+          resolve(new Array(3).fill(0).map((_, i) => getRandomProjectData())),
         1000
       )
     })

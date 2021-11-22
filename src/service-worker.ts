@@ -7,7 +7,6 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import {
-  NetworkFirst,
   StaleWhileRevalidate,
   CacheFirst,
 } from 'workbox-strategies'
@@ -50,8 +49,8 @@ registerRoute(
 )
 
 setCacheNameDetails({
-  prefix: 'geekr-app',
-  suffix: 'v2',
+  prefix: 'pf-app',
+  suffix: 'v1',
   precache: 'precache',
   runtime: 'runtime',
 })
@@ -63,79 +62,6 @@ self.addEventListener('message', (event) => {
     self.skipWaiting()
   }
 })
-
-const newResponse = (
-  res: Response,
-  headerFn: (headers: Headers) => Headers
-): Promise<void | Response> => {
-  const cloneHeaders = () => {
-    const headers = new Headers()
-    res.headers.forEach((value, key) => {
-      headers.append(key, value)
-    })
-    return headers
-  }
-
-  const headers = headerFn ? headerFn(cloneHeaders()) : res.headers
-
-  return new Promise((resolve) =>
-    res.blob().then((blob) => {
-      resolve(
-        new Response(blob, {
-          status: res.status,
-          statusText: res.statusText,
-          headers,
-        })
-      )
-    })
-  )
-}
-
-const cacheHeaderPlugin = [
-  {
-    cacheWillUpdate: ({ response }) =>
-      newResponse(response.clone(), (headers: Headers) => {
-        headers.set('x-sw-cache', new Date().getTime().toString())
-        return headers
-      }),
-  },
-]
-
-registerRoute(
-  /^https?:\/\/.*\/kek\/(v1|v2)\/.*/,
-  new NetworkFirst({
-    networkTimeoutSeconds: 10,
-    cacheName: 'api-cache-geekr',
-    plugins: [
-      ...cacheHeaderPlugin,
-      new CacheableResponsePlugin({
-        statuses: [200, 201],
-      }),
-      new ExpirationPlugin({
-        maxAgeSeconds: 24 * 60 * 60 * 7, // one week
-        maxEntries: 100,
-      }),
-    ],
-  })
-)
-
-registerRoute(
-  /^https?:\/\/habra\.jarvis394\.ml\/.*/,
-  new NetworkFirst({
-    networkTimeoutSeconds: 10,
-    cacheName: 'api-cache-geekr',
-    plugins: [
-      ...cacheHeaderPlugin,
-      new CacheableResponsePlugin({
-        statuses: [200, 201],
-      }),
-      new ExpirationPlugin({
-        maxAgeSeconds: 24 * 60 * 60 * 7, // one week
-        maxEntries: 100,
-      }),
-    ],
-  })
-)
 
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 registerRoute(
@@ -150,19 +76,6 @@ registerRoute(
   /^https:\/\/fonts\.gstatic\.com/,
   new CacheFirst({
     cacheName: 'google-fonts-webfonts',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-    ],
-  })
-)
-
-// Cache local fonts
-registerRoute(
-  /.*\/fonts\/.*/,
-  new CacheFirst({
-    cacheName: 'geekr-fonts',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],

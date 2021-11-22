@@ -107,7 +107,7 @@ const BottomNavigation = () => {
     }
   }
 
-  if (route.shouldHideInterface) return null
+  if (!route || route.shouldHideInterface) return null
 
   return (
     <>
