@@ -16,7 +16,7 @@ const BottomLayout = styled('div')(({ theme }) => ({
 
 const FabIcon = styled(Fab)(({ theme }) => ({
   backgroundColor: 'white',
-  boxShadow: '0px 0px 1px',
+  boxShadow: '0px 2px 24px rgba(0, 0, 0, 0.05)',
   marginBottom: '4px',
 }))
 
@@ -38,7 +38,7 @@ const TryAgain = styled(Button)(({ theme }) => ({
   color: 'black',
   background: 'white',
   borderColor: 'black',
-  boxShadow: '0px 0px 2px',
+  boxShadow: '0px 2px 24px rgba(0, 0, 0, 0.05)',
   display: 'flex',
   marginTop: '32px',
 }))

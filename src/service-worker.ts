@@ -1,14 +1,16 @@
 /// <reference lib="webworker" />
 /* eslint-disable no-restricted-globals */
 
+import * as navigationPreload from 'workbox-navigation-preload'
 import { clientsClaim, setCacheNameDetails } from 'workbox-core'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
-import { registerRoute } from 'workbox-routing'
+import { registerRoute, NavigationRoute } from 'workbox-routing'
 import {
   StaleWhileRevalidate,
   CacheFirst,
+  NetworkOnly,
 } from 'workbox-strategies'
 
 declare const self: ServiceWorkerGlobalScope
@@ -83,3 +85,21 @@ registerRoute(
     ],
   })
 )
+
+navigationPreload.enable()
+
+const networkOnly = new NetworkOnly()
+const navigationHandler = async (params) => {
+  try {
+    // Attempt a network request.
+    return await networkOnly.handle(params)
+  } catch (error) {
+    // If it fails, return the cached HTML.
+    return caches.match('/offline', {
+      cacheName: 'offline',
+    })
+  }
+}
+
+// Register this strategy to handle all navigations.
+registerRoute(new NavigationRoute(navigationHandler))
