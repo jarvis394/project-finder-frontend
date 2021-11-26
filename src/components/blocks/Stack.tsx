@@ -79,12 +79,12 @@ const Stack: React.FC<StackProps> = ({
     index: 0,
   })
 
-  /** 
-   * We do not need to have any logic in vote function
-   * because it triggers on card animation end, which happens
-   * only when user did a vote
-   */
   const vote = (v: boolean) => {
+    /** 
+     * We do not need to have any logic in vote function
+     * because it triggers on card animation end, which happens
+     * only when user did a vote
+     */
     if (!isLoading) {
       // Hide card
       setIsCardShown(false)
@@ -276,6 +276,8 @@ const Stack: React.FC<StackProps> = ({
               exit="exit"
               onDragEnd={handleDragEnd}
               data={current.data}
+              voteLike={voteLike}
+              voteReject={voteReject}
             />
             <Circle
               variant="reject"

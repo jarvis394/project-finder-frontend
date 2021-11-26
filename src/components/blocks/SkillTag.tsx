@@ -1,4 +1,4 @@
-import { Grid, styled, alpha } from '@mui/material'
+import { styled, alpha } from '@mui/material'
 import React from 'react'
 
 interface SkillTagProps {

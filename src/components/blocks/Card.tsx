@@ -11,7 +11,7 @@ import {
   DialogActions,
   Grid,
   ButtonBase,
-  Divider,
+  Slide,
 } from '@mui/material'
 import {
   BOTTOM_BAR_HEIGHT,
@@ -21,6 +21,7 @@ import {
 import CloseIcon from '@mui/icons-material/CloseRounded'
 import { Icon24Cancel } from '@vkontakte/icons'
 import { Icon24LikeOutline } from '@vkontakte/icons'
+import { TransitionProps } from '@mui/material/transitions'
 
 const StyledCard = styled(motion.div)(({ theme }) => ({
   position: 'absolute',
@@ -48,6 +49,8 @@ const DialogAppBar = styled(AppBar)(({ theme }) => ({
   color: theme.palette.text.primary,
   background: theme.palette.background.paper,
   boxShadow: 'none',
+  borderTopLeftRadius: 12,
+  borderTopRightRadius: 12,
 }))
 const DialogToolbar = styled(Toolbar)({
   minHeight: '56px !important',
@@ -59,6 +62,7 @@ const CardDialogPaper = styled('div')(({ theme }) => ({
   background: theme.palette.background.paper,
   width: '100%',
   height: '100%',
+  borderRadius: '12px !important',
 }))
 const CardDialogActions = styled(DialogActions)(({ theme }) => ({
   padding: 0,
@@ -93,14 +97,25 @@ const CenteredButtonBase = styled(ButtonBase)({
   justifyContent: 'center',
   width: '100%',
   height: BOTTOM_BAR_HEIGHT,
-  borderRadius: 12
+  borderRadius: 12,
+})
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />
 })
 
 interface CardProps {
   open: boolean
-  setClosed: () => unknown
-  children: React.ReactElement[]
   title?: string
+  children: ({ isExpanded: boolean }) => React.ReactElement
+  setClosed: () => unknown
+  voteLike: () => unknown
+  voteReject: () => unknown
 }
 
 const Card: React.FC<CardProps & MotionProps> = ({
@@ -108,9 +123,19 @@ const Card: React.FC<CardProps & MotionProps> = ({
   children,
   setClosed,
   title = '',
+  voteLike,
+  voteReject,
   ...props
 }) => {
   const dialogRef = useRef()
+  const handleLikeClick = () => {
+    setClosed()
+    voteLike()
+  }
+  const handleRejectClick = () => {
+    setClosed()
+    voteReject()
+  }
 
   return (
     <>
@@ -119,7 +144,7 @@ const Card: React.FC<CardProps & MotionProps> = ({
         open={open}
         fullScreen
         PaperProps={{ ref: dialogRef }}
-        transitionDuration={{ enter: 0, exit: 0 }}
+        TransitionComponent={Transition}
       >
         <DialogAppBar position="fixed">
           <DialogToolbar>
@@ -130,7 +155,7 @@ const Card: React.FC<CardProps & MotionProps> = ({
           </DialogToolbar>
         </DialogAppBar>
         <Offset />
-        <Content>{children}</Content>
+        <Content>{children({ isExpanded: true })}</Content>
         <CardDialogActions>
           <Grid container>
             <Grid
@@ -138,6 +163,7 @@ const Card: React.FC<CardProps & MotionProps> = ({
               sx={{ color: (theme) => theme.palette.secondary.main }}
               item
               xs={6}
+              onClick={handleRejectClick}
             >
               <Icon24Cancel />
               <CardDialogActionButtonLabel>
@@ -149,6 +175,7 @@ const Card: React.FC<CardProps & MotionProps> = ({
               sx={{ color: (theme) => theme.palette.primary.main }}
               item
               xs={6}
+              onClick={handleLikeClick}
             >
               <Icon24LikeOutline />
               <CardDialogActionButtonLabel>
@@ -158,16 +185,14 @@ const Card: React.FC<CardProps & MotionProps> = ({
           </Grid>
         </CardDialogActions>
       </Dialog>
-      {!open && (
-        <StyledCard
-          dragConstraints={{ left: 0, right: 0 }}
-          drag="x"
-          dragElastic={0.9}
-          {...props}
-        >
-          <Content>{children}</Content>
-        </StyledCard>
-      )}
+      <StyledCard
+        dragConstraints={{ left: 0, right: 0 }}
+        drag="x"
+        dragElastic={0.9}
+        {...props}
+      >
+        <Content>{children({ isExpanded: false })}</Content>
+      </StyledCard>
     </>
   )
 }

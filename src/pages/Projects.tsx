@@ -34,6 +34,8 @@ const Wrapper = styled(motion.div)`
 
 const getRandomProjectData = () => ({
   title: 'Project Finder',
+  location: 'ул. Колотушкина, д. 13',
+  canRemote: true,
   description:
     'Требуются мобильные разработчики, желательно со стажем коммерческой разработки не менее 80 лет. Обязательно знание PowerPoint.',
   skillTags: [
