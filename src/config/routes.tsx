@@ -5,6 +5,7 @@ import Notifications from 'src/pages/Notifications'
 import Profile from 'src/pages/Profile'
 import Projects from 'src/pages/Projects'
 import Specialists from 'src/pages/Specialists'
+import Offline from 'src/pages/Offline'
 
 export interface Route {
   path: string
@@ -58,9 +59,15 @@ export const routes: Route[] = [
     alias: 'loginPassword',
   },
   {
+    path: '/offline',
+    element: <Offline />,
+    shouldHideInterface: true,
+    alias: 'offline',
+  },
+  {
     path: '/',
     element: <Navigate replace to="/projects" />,
     shouldHideInterface: false,
-    alias: 'root'
-  }
+    alias: 'root',
+  },
 ]
