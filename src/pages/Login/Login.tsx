@@ -13,6 +13,7 @@ const Root = styled('div')({
   justifyContent: 'center',
   width: '100%',
   flex: 2,
+  maxHeight: 'calc(100vh - 56px)',
   flexDirection: 'column',
 })
 const HeaderText = styled(Typography)({
@@ -66,7 +67,7 @@ const Login: React.FC<StepProps> = ({ setValues }) => {
       <SubheaderText>
         Введите свой логин или зарегестрируйтесь, чтобы найти свой проект мечты
       </SubheaderText>
-      <ColumnContainer onSubmit={goNext}>
+      <ColumnContainer onSubmit={goNext} autoComplete="on">
         <Input required inputRef={inputRef} placeholder="Логин" type="text" />
         <Button
           fullWidth

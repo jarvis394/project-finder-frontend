@@ -12,6 +12,7 @@ import BottomNavigation from 'src/components/blocks/BottomNavigation'
 import { useRoutes } from 'react-router-dom'
 import { routes } from 'src/config/routes'
 import { useRoute } from 'src/hooks'
+import { SnackbarProvider } from 'notistack'
 
 const Root = styled('div', {
   shouldForwardProp: (prop) => prop !== 'hideInterface',
@@ -35,9 +36,16 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Root hideInterface={route?.shouldHideInterface}>{Component}</Root>
-      <BottomNavigation />
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      >
+        <CssBaseline />
+        <Root hideInterface={route?.shouldHideInterface}>{Component}</Root>
+        <BottomNavigation />
+      </SnackbarProvider>
     </ThemeProvider>
   )
 }

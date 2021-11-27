@@ -3,8 +3,9 @@ import {
   AUTH_LOGIN_FETCH,
   AUTH_LOGIN_FETCH_FULFILLED,
   AUTH_LOGIN_FETCH_REJECTED,
+  AUTH_LOGIN_FLUSH_ERRORED_LOGIN,
 } from 'src/store/reducers/auth/types'
-// import browserSignature from 'browser-signature'
+import getBrowserFingerprint from 'get-browser-fingerprint'
 
 interface AuthLoginParams {
   login: string
@@ -13,7 +14,7 @@ interface AuthLoginParams {
 
 export const login = (params: AuthLoginParams) => async (dispatch) => {
   const { login, password } = params
-  const fingerprint = 'jvhgvjhj'
+  const fingerprint = getBrowserFingerprint()
   dispatch({ type: AUTH_LOGIN_FETCH })
 
   try {
@@ -26,7 +27,11 @@ export const login = (params: AuthLoginParams) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: AUTH_LOGIN_FETCH_REJECTED,
-      payload: { data: error },
+      payload: { error },
     })
   }
+}
+
+export const flushErroredLogin = () => async (dispatch) => {
+  dispatch({ type: AUTH_LOGIN_FLUSH_ERRORED_LOGIN })
 }

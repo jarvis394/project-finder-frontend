@@ -15,7 +15,12 @@ import { useNavigate } from 'react-router'
 import { VisibilityOffRounded, VisibilityRounded } from '@mui/icons-material'
 import ToggleButton from 'material-ui-toggle-icon'
 import { useDispatch } from 'react-redux'
-import { login as loginAction } from 'src/store/actions/auth'
+import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
+import { useSelector } from 'src/hooks'
+import FetchingState from 'src/interfaces/FetchingState'
+import { useSnackbar } from 'notistack'
+import { AUTH_ERROR_MAP } from 'src/config/errorCodes'
+import Spinner from 'src/components/blocks/Spinner'
 
 const Root = styled('div')({
   display: 'flex',
@@ -23,6 +28,7 @@ const Root = styled('div')({
   justifyContent: 'center',
   width: '100%',
   flex: 2,
+  maxHeight: 'calc(100vh - 56px)',
   flexDirection: 'column',
 })
 const HeaderText = styled(Typography)({
@@ -49,15 +55,17 @@ const SubheaderText = styled(Typography)(({ theme }) => ({
 
 const Password: React.FC<StepProps> = ({ values, setValues }) => {
   const [showPassword, setShowPassword] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
   const inputRef = useRef<HTMLInputElement>()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const authError = useSelector((store) => store.auth.fetchError)
+  const authResponseFetchingState = useSelector((store) => store.auth.state)
   const goNext: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     const password = inputRef.current.value
 
-    // Step checking fixes some edge cases (ex. tapping too fast on button)
-    if (password) {
+    if (values.login && password) {
       setValues({
         login: values.login,
         password,
@@ -70,6 +78,19 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
   useEffect(() => {
     if (!values.login) navigate('/login')
   }, [])
+
+  useEffect(() => {
+    if (authResponseFetchingState === FetchingState.Fetched) {
+      navigate('/projects')
+    } else if (authResponseFetchingState === FetchingState.Error) {
+      // We need to only say "Invalid login or password" error
+      // to not to show any sensitive information
+      enqueueSnackbar(AUTH_ERROR_MAP[7], {
+        variant: 'error',
+      })
+      dispatch(flushErroredLogin())
+    }
+  }, [authResponseFetchingState])
 
   return (
     <Root>
@@ -85,7 +106,7 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
       <SubheaderText>
         Введите свой логин или зарегестрируйтесь, чтобы найти свой проект мечты
       </SubheaderText>
-      <ColumnContainer onSubmit={goNext}>
+      <ColumnContainer onSubmit={goNext} autoComplete="on">
         <Input
           required
           inputRef={inputRef}
@@ -111,8 +132,13 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
           sx={{ maxWidth: BUTTON_MAX_WIDTH }}
           color="primary"
           variant="contained"
+          disabled={authResponseFetchingState === FetchingState.Fetching}
         >
-          Войти
+          {authResponseFetchingState === FetchingState.Fetching ? (
+            <Spinner />
+          ) : (
+            'Войти'
+          )}
         </Button>
         <Button
           fullWidth
