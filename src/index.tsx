@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './components/App'
+import serviceWorkerConfig from 'src/config/serviceWorkerConfig'
 
 ReactDOM.render(
   <Provider store={store}>
@@ -14,4 +15,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 )
-serviceWorker.register()
+serviceWorker.register(serviceWorkerConfig)
