@@ -29,10 +29,12 @@ const theme: ThemeOptions = {
           textTransform: 'none',
           fontFamily: 'Google Sans',
           fontWeight: 500,
+          fontSize: 16,
+          letterSpacing: 'normal'
         },
         fullWidth: {
           borderRadius: 12,
-          minHeight: 44
+          minHeight: 48
         },
       },
     },

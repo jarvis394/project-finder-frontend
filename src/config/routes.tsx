@@ -1,4 +1,6 @@
 import React from 'react'
+import { Navigate } from 'react-router-dom'
+import StepLoginForm from 'src/pages/Login/index'
 import Notifications from 'src/pages/Notifications'
 import Profile from 'src/pages/Profile'
 import Projects from 'src/pages/Projects'
@@ -42,8 +44,22 @@ export const routes: Route[] = [
     alias: 'notifications',
   },
   {
+    path: '/login',
+    element: <StepLoginForm step="login" />,
+    title: 'Авторизация',
+    shouldHideInterface: true,
+    alias: 'loginEmail',
+  },
+  {
+    path: '/login/password',
+    element: <StepLoginForm step="password" />,
+    title: 'Авторизация',
+    shouldHideInterface: true,
+    alias: 'loginPassword',
+  },
+  {
     path: '/',
-    element: <>Home</>,
+    element: <Navigate replace to="/projects" />,
     shouldHideInterface: false,
     alias: 'root'
   }

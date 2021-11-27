@@ -1,8 +1,9 @@
-import { styled, Avatar as MUIAvatar, useTheme, hexToRgb } from '@mui/material'
+import { styled, Avatar as MUIAvatar, useTheme, hexToRgb, StyledComponentProps, Theme } from '@mui/material'
 import React, { useState } from 'react'
 import randomGradient from 'random-gradient'
 import { UserBase } from 'project-finder-backend-types'
 import mixColors from 'src/utils/mixColors'
+import { SxProps } from '@mui/system'
 
 const StyledAvatar = styled('div')({
   display: 'flex',
@@ -30,9 +31,10 @@ interface AvatarProps {
   src?: string
   uid?: string
   letter?: string
+  sx?: SxProps<Theme>
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, uid, letter }) => {
+const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({ src, uid, letter, sx, ...props }) => {
   const [isLoaded, setLoaded] = useState<boolean>(!!src)
   const theme = useTheme()
   const background = randomGradient(uid)
@@ -44,9 +46,9 @@ const Avatar: React.FC<AvatarProps> = ({ src, uid, letter }) => {
   const handleError = () => setLoaded(false)
 
   return isLoaded ? (
-    <StyledImageAvatar src={src} onError={handleError} />
+    <StyledImageAvatar sx={sx} src={src} onError={handleError} {...props} />
   ) : (
-    <StyledAvatar sx={{ background, color }}>{letter}</StyledAvatar>
+    <StyledAvatar sx={{ background, color, ...sx }} {...props}>{letter}</StyledAvatar>
   )
 }
 
