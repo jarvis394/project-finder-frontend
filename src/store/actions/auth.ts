@@ -18,7 +18,7 @@ export const login = (params: AuthLoginParams) => async (dispatch) => {
   dispatch({ type: AUTH_LOGIN_FETCH })
 
   try {
-    const data = await api.login(login, password, fingerprint)
+    const data = await api.user.login(login, password, fingerprint)
 
     dispatch({
       type: AUTH_LOGIN_FETCH_FULFILLED,

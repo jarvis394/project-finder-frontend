@@ -1,31 +1,27 @@
 import {
   alpha,
-  Autocomplete,
-  Button,
-  ButtonBase,
   styled,
   Box,
   Typography,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
+  CircularProgress,
+  Backdrop,
 } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from 'src/components/blocks/Input'
 import { BUTTON_MAX_WIDTH } from 'src/config/constants'
-import {
-  Icon24ArrowRightOutline,
-  Icon28ChevronDownOutline,
-} from '@vkontakte/icons'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import UploadAvatar from 'src/components/blocks/UploadAvatar'
-import dayjs from 'dayjs'
 import Avatar from 'src/components/blocks/Avatar'
-import { FlashOffTwoTone } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
+import { register as apiUserRegister } from 'src/api/user'
+import { UserRegisterRes } from 'project-finder-backend-types'
+import FetchingState from 'src/interfaces/FetchingState'
+import { useSnackbar } from 'notistack'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'src/hooks'
+import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
+import { AUTH_ERROR_MAP } from 'src/config/errorCodes'
 
 interface FormInput {
   email: string
@@ -52,23 +48,78 @@ const ColumnContainer = styled('form')(({ theme }) => ({
 }))
 
 const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
-  const { register, handleSubmit, setError, formState, clearErrors } =
-    useForm<FormInput>({
-      shouldFocusError: true,
-    })
+  const { register, handleSubmit } = useForm<FormInput>({
+    shouldFocusError: true,
+  })
+  const { enqueueSnackbar } = useSnackbar()
+  const [registerFetchingState, setRegisterFetchingState] =
+    useState<FetchingState>(FetchingState.Idle)
+  const [registerResponseData, setRegisterResponseData] =
+    useState<UserRegisterRes>()
+  const authFetchingState = useSelector((store) => store.auth.state)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    setValues((prev) => ({
-      contacts: {
-        email: data.email,
-        telegram: data.telegram,
-        website: data.website,
-      },
-      ...prev,
-    }))
-    
-    navigate('/')
-  }
+  const onSubmit: SubmitHandler<FormInput> = React.useCallback(
+    async (data) => {
+      setValues((prev) => ({
+        ...prev,
+        contacts: {
+          email: data.email,
+          telegram: data.telegram,
+          website: data.website,
+        },
+      }))
+
+      // Make API call for registering the user
+      try {
+        setRegisterFetchingState(FetchingState.Fetching)
+        const registerResponse = await apiUserRegister({
+          username: values.login,
+          name: values.name,
+          lastname: values.lastname,
+          skillTags: values.skillTags,
+          password: values.password,
+          birthDate: values.birthDate,
+          gender: values.gender,
+          contact: data,
+          location: values.location,
+        })
+        setRegisterResponseData(registerResponse)
+        setRegisterFetchingState(FetchingState.Fetched)
+        console.log(registerResponse)
+        dispatch(
+          loginAction({ login: values.login, password: values.password })
+        )
+      } catch (e) {
+        setRegisterFetchingState(FetchingState.Error)
+        enqueueSnackbar(
+          'Не получилось зарегистрировать пользователя\nПроверьте введённые данные',
+          {
+            variant: 'error',
+          }
+        )
+      }
+    },
+    [values]
+  )
+
+  useEffect(() => {
+    setRegisterFetchingState(FetchingState.Idle)
+  }, [])
+
+  useEffect(() => {
+    if (authFetchingState === FetchingState.Fetched) {
+      navigate('/projects')
+    } else if (authFetchingState === FetchingState.Error) {
+      // FIXME: we actually need to show the errors because
+      // it is unusual if a newly registered user would have problems
+      // with password or login
+      enqueueSnackbar(AUTH_ERROR_MAP[7], {
+        variant: 'error',
+      })
+      dispatch(flushErroredLogin())
+    }
+  }, [authFetchingState])
 
   useEffect(() => {
     if (!values.login) return navigate('/register')
@@ -78,6 +129,18 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
 
   return (
     <Root>
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          flexDirection: 'column',
+          gap: (theme) => theme.spacing(2),
+        }}
+        open={authFetchingState === FetchingState.Fetching}
+      >
+        <CircularProgress color="inherit" />
+        <Typography fontWeight="bold">Авторизируемся на сервере...</Typography>
+      </Backdrop>
       <ColumnContainer onSubmit={handleSubmit(onSubmit)} autoComplete="on">
         <Box
           sx={{
@@ -87,7 +150,7 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
             mb: 4,
           }}
         >
-          <Avatar uid="a" letter={(values.name || 'a')[0]} />
+          <Avatar uid={values.login || 'a'} letter={(values.name || 'a')[0]} />
         </Box>
         <Input
           {...register('email', { required: true })}
@@ -105,9 +168,26 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
           placeholder="Веб-сайт"
           type="text"
         />
-        <Button fullWidth type="submit" color="primary" variant="contained">
+        <LoadingButton
+          fullWidth
+          type="submit"
+          color="primary"
+          variant="contained"
+          loading={registerFetchingState === FetchingState.Fetching}
+        >
           Зарегистрироваться
-        </Button>
+        </LoadingButton>
+        <Typography
+          sx={{
+            mt: 4,
+            color: (theme) => alpha(theme.palette.text.primary, 0.5),
+            fontSize: 14,
+            textAlign: 'center',
+          }}
+        >
+          Регистрируясь, вы предоставляете свои данные несовершеннолетним
+          школьникам-хакерам
+        </Typography>
       </ColumnContainer>
     </Root>
   )

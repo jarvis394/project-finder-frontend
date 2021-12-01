@@ -1,3 +1,5 @@
+import { SkillTagNames } from 'project-finder-backend-types'
+
 export const API_URL = 'https://pf.stuvars.com/api/'
 
 export const EMOTION_CACHE_KEY = 'pf'
@@ -20,3 +22,10 @@ export const MAX_SKILL_TAGS_DISPLAYED = 5
 export const MIN_SWIPE_WIDTH = 128
 export const CIRCLE_WIDTH = 96
 export const CIRCLE_ANIMATION_SCALE = 1.3
+
+export const SKILL_TAGS: SkillTagNames[] = [
+  'ReactJS',
+  'Django',
+  'FastAPI',
+  'Express',
+]

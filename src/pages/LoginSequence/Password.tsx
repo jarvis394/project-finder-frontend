@@ -20,7 +20,7 @@ import { useSelector } from 'src/hooks'
 import FetchingState from 'src/interfaces/FetchingState'
 import { useSnackbar } from 'notistack'
 import { AUTH_ERROR_MAP } from 'src/config/errorCodes'
-import Spinner from 'src/components/blocks/Spinner'
+import { LoadingButton } from '@mui/lab'
 
 const Root = styled('div')({
   display: 'flex',
@@ -125,20 +125,16 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
             </IconButton>
           }
         />
-        <Button
+        <LoadingButton
           fullWidth
           type="submit"
           sx={{ maxWidth: BUTTON_MAX_WIDTH }}
           color="primary"
           variant="contained"
-          disabled={authResponseFetchingState === FetchingState.Fetching}
+          loading={authResponseFetchingState === FetchingState.Fetching}
         >
-          {authResponseFetchingState === FetchingState.Fetching ? (
-            <Spinner />
-          ) : (
-            'Войти'
-          )}
-        </Button>
+          Войти
+        </LoadingButton>
         <Button
           fullWidth
           sx={{

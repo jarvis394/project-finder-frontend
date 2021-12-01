@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import useQuery from 'src/hooks/useQuery'
 import AuthData from './AuthData'
 import Contacts from './Contacts'
+import Skills from './Skills'
 import PersonData from './PersonData'
+import { SkillTag } from 'project-finder-backend-types'
 
 interface RegisterValuesObject {
+  skillTags: SkillTag[]
   login: string
   password: string
   name: string
@@ -39,6 +42,7 @@ const StepRegisterForm: React.FC = () => {
       telegram: null,
       website: null,
     },
+    skillTags: []
   })
 
   return (
@@ -46,6 +50,9 @@ const StepRegisterForm: React.FC = () => {
       {!step && <AuthData values={values} setValues={setValues} />}
       {step === 'person' && (
         <PersonData values={values} setValues={setValues} />
+      )}
+      {step === 'skills' && (
+        <Skills values={values} setValues={setValues} />
       )}
       {step === 'contacts' && (
         <Contacts values={values} setValues={setValues} />

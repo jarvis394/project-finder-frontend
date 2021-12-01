@@ -88,14 +88,14 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
 
     if (birthDate.isValid()) {
       setValues((prev) => ({
+        ...prev,
         birthDate: birthDate.format(),
         name: data.name,
         lastname: data.lastname,
         location: data.location,
         gender: data.gender === 'female',
-        ...prev,
       }))
-      navigate('/register?step=contacts')
+      navigate('/register?step=skills')
     } else {
       setError('birthDate.day', {
         message: 'Некорректная дата',

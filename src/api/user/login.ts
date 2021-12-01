@@ -1,5 +1,5 @@
 import { AuthLoginRes } from 'project-finder-backend-types'
-import makeRequest from './makeRequest'
+import makeRequest from '../makeRequest'
 
 export default async (login: string, password: string, fingerprint: string) =>
   await makeRequest<AuthLoginRes>({

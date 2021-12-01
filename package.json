@@ -6,6 +6,7 @@
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.1.1",
+    "@mui/lab": "^5.0.0-alpha.58",
     "@mui/material": "^5.1.1",
     "@vkontakte/icons": "^1.134.0",
     "axios": "^0.24.0",
@@ -59,7 +60,7 @@
     "customize-cra": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.27.0",
-    "project-finder-backend-types": "^1.1.0",
+    "project-finder-backend-types": "^1.2.2",
     "react-app-rewired": "^2.1.8"
   }
 }

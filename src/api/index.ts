@@ -1,2 +1,2 @@
-export { default as login } from './login'
+export * as user from './user'
 export { default as makeRequest } from './makeRequest'
