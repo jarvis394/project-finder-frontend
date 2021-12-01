@@ -15,15 +15,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-const Input: React.FC<InputBaseProps> = ({ ...props }) => {
-  return (
-    <StyledInputBase
-      autoFocus
-      fullWidth
-      inputProps={{ 'aria-label': 'search' }}
-      {...props}
-    />
-  )
-}
+const Input: React.FC<InputBaseProps> = React.forwardRef(
+  ({ ...props }, ref) => {
+    return (
+      <StyledInputBase
+        autoFocus
+        fullWidth
+        inputRef={ref}
+        inputProps={{ 'aria-label': 'search' }}
+        {...props}
+      />
+    )
+  }
+)
 
 export default React.memo(Input)

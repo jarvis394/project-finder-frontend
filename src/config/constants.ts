@@ -13,6 +13,9 @@ export const MAX_CARD_WIDTH = 512
 export const APP_MAX_WIDTH = 1000
 export const BUTTON_MAX_WIDTH = 328
 
+export const MIN_PASSWORD_LENGTH = 7
+export const PASSWORD_SPECIAL_SYMBOLS =
+  '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789'.split('')
 export const MAX_SKILL_TAGS_DISPLAYED = 5
 export const MIN_SWIPE_WIDTH = 128
 export const CIRCLE_WIDTH = 96

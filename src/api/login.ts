@@ -3,7 +3,7 @@ import makeRequest from './makeRequest'
 
 export default async (login: string, password: string, fingerprint: string) =>
   await makeRequest<AuthLoginRes>({
-    path: 'auth/login',
+    path: 'user/login',
     requestOptions: {
       method: 'POST',
       data: {

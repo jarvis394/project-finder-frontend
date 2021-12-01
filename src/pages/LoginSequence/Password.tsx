@@ -59,7 +59,6 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
   const inputRef = useRef<HTMLInputElement>()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const authError = useSelector((store) => store.auth.fetchError)
   const authResponseFetchingState = useSelector((store) => store.auth.state)
   const goNext: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()

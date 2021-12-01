@@ -6,6 +6,7 @@ import { Icon24ArrowRightOutline } from '@vkontakte/icons'
 import Avatar from 'src/components/blocks/Avatar'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const Root = styled('div')({
   display: 'flex',
@@ -37,6 +38,14 @@ const SubheaderText = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
   maxWidth: 340,
 }))
+const StyledLink = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  color: 'inherit',
+  display: 'flex',
+  alignItems: 'center',
+  width: '100%',
+  justifyContent: 'center',
+}))
 
 const Login: React.FC<StepProps> = ({ setValues }) => {
   const inputRef = useRef<HTMLInputElement>()
@@ -50,7 +59,7 @@ const Login: React.FC<StepProps> = ({ setValues }) => {
         login,
         password: '',
       })
-      navigate('/login/password')
+      navigate('/login?step=password')
     }
   }
   return (
@@ -68,7 +77,13 @@ const Login: React.FC<StepProps> = ({ setValues }) => {
         Введите свой логин или зарегестрируйтесь, чтобы найти свой проект мечты
       </SubheaderText>
       <ColumnContainer onSubmit={goNext} autoComplete="on">
-        <Input required inputRef={inputRef} placeholder="Логин" type="text" />
+        <Input
+          required
+          inputRef={inputRef}
+          placeholder="Логин"
+          type="text"
+          autoComplete="username"
+        />
         <Button
           fullWidth
           type="submit"
@@ -79,19 +94,21 @@ const Login: React.FC<StepProps> = ({ setValues }) => {
         >
           Продолжить
         </Button>
-        <Button
-          fullWidth
-          sx={{
-            mt: -0.5,
-            maxWidth: BUTTON_MAX_WIDTH,
-            backgroundColor: (theme) =>
-              darken(theme.palette.background.paper, 0.05),
-          }}
-          variant="contained"
-          color="inherit"
-        >
-          Зарегестрироваться
-        </Button>
+        <StyledLink to="/register">
+          <Button
+            fullWidth
+            sx={{
+              mt: -0.5,
+              maxWidth: BUTTON_MAX_WIDTH,
+              backgroundColor: (theme) =>
+                darken(theme.palette.background.paper, 0.05),
+            }}
+            variant="contained"
+            color="inherit"
+          >
+            Зарегестрироваться
+          </Button>
+        </StyledLink>
       </ColumnContainer>
     </Root>
   )

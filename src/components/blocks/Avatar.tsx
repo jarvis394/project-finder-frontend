@@ -1,7 +1,12 @@
-import { styled, Avatar as MUIAvatar, useTheme, hexToRgb, StyledComponentProps, Theme } from '@mui/material'
+import {
+  styled,
+  Avatar as MUIAvatar,
+  useTheme,
+  StyledComponentProps,
+  Theme,
+} from '@mui/material'
 import React, { useState } from 'react'
 import randomGradient from 'random-gradient'
-import { UserBase } from 'project-finder-backend-types'
 import mixColors from 'src/utils/mixColors'
 import { SxProps } from '@mui/system'
 
@@ -17,7 +22,7 @@ const StyledAvatar = styled('div')({
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  userSelect: 'none'
+  userSelect: 'none',
 })
 const StyledImageAvatar = styled(MUIAvatar)({
   display: 'flex',
@@ -34,7 +39,13 @@ interface AvatarProps {
   sx?: SxProps<Theme>
 }
 
-const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({ src, uid, letter, sx, ...props }) => {
+const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({
+  src,
+  uid,
+  letter,
+  sx,
+  ...props
+}) => {
   const [isLoaded, setLoaded] = useState<boolean>(!!src)
   const theme = useTheme()
   const background = randomGradient(uid)
@@ -45,10 +56,12 @@ const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({ src, uid, letter
   const color = theme.palette.getContrastText(middleColor)
   const handleError = () => setLoaded(false)
 
-  return isLoaded ? (
-    <StyledImageAvatar sx={sx} src={src} onError={handleError} {...props} />
+  return !isLoaded || !src ? (
+    <StyledAvatar sx={{ background, color, ...sx }} {...props}>
+      {letter}
+    </StyledAvatar>
   ) : (
-    <StyledAvatar sx={{ background, color, ...sx }} {...props}>{letter}</StyledAvatar>
+    <StyledImageAvatar sx={sx} src={src} onError={handleError} {...props} />
   )
 }
 

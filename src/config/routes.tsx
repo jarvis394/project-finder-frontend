@@ -1,11 +1,12 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import StepLoginForm from 'src/pages/Login/index'
+import LoginSequence from 'src/pages/LoginSequence/index'
 import Notifications from 'src/pages/Notifications'
 import Profile from 'src/pages/Profile'
 import Projects from 'src/pages/Projects'
 import Specialists from 'src/pages/Specialists'
 import Offline from 'src/pages/Offline'
+import RegisterSequence from 'src/pages/RegisterSequence/index'
 
 export interface Route {
   path: string
@@ -45,18 +46,18 @@ export const routes: Route[] = [
     alias: 'notifications',
   },
   {
-    path: '/login',
-    element: <StepLoginForm step="login" />,
+    path: '/register',
+    element: <RegisterSequence />,
     title: 'Авторизация',
     shouldHideInterface: true,
     alias: 'loginEmail',
   },
   {
-    path: '/login/password',
-    element: <StepLoginForm step="password" />,
+    path: '/login',
+    element: <LoginSequence />,
     title: 'Авторизация',
     shouldHideInterface: true,
-    alias: 'loginPassword',
+    alias: 'login',
   },
   {
     path: '/offline',
