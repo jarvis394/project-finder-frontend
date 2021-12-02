@@ -19,7 +19,7 @@ import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
 import { useSelector } from 'src/hooks'
 import FetchingState from 'src/interfaces/FetchingState'
 import { useSnackbar } from 'notistack'
-import { AUTH_ERROR_MAP } from 'src/config/errorCodes'
+import { ERROR_MAP } from 'src/config/errorCodes'
 import { LoadingButton } from '@mui/lab'
 
 const Root = styled('div')({
@@ -84,7 +84,7 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
     } else if (authResponseFetchingState === FetchingState.Error) {
       // We need to only say "Invalid login or password" error
       // to not to show any sensitive information
-      enqueueSnackbar(AUTH_ERROR_MAP[7], {
+      enqueueSnackbar(ERROR_MAP[7], {
         variant: 'error',
       })
       dispatch(flushErroredLogin())

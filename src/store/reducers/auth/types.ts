@@ -1,4 +1,4 @@
-import AuthLoginError from 'src/interfaces/AuthLoginError'
+import APIError from 'src/interfaces/APIError'
 import FetchingState from 'src/interfaces/FetchingState'
 
 export const AUTH_PREFIX = 'AUTH_'
@@ -10,5 +10,5 @@ export interface State {
   accessToken: string
   refreshToken: string
   state: FetchingState
-  fetchError: AuthLoginError
+  fetchError: APIError
 }

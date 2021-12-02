@@ -209,6 +209,9 @@ const AuthData: React.FC<StepProps> = ({ setValues }) => {
           sx={{ maxWidth: BUTTON_MAX_WIDTH }}
           color="primary"
           variant="contained"
+          disabled={
+            !doesPasswordContainSpecialSymbols || !doesPasswordExceedsMinLength
+          }
           endIcon={<Icon24ArrowRightOutline width={20} height={20} />}
         >
           Продолжить

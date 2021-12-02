@@ -21,7 +21,9 @@ import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'src/hooks'
 import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
-import { AUTH_ERROR_MAP } from 'src/config/errorCodes'
+import { ERROR_MAP } from 'src/config/errorCodes'
+import { AxiosError } from 'axios'
+import APIError from 'src/interfaces/APIError'
 
 interface FormInput {
   email: string
@@ -91,12 +93,12 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
           loginAction({ login: values.login, password: values.password })
         )
       } catch (e) {
+        const { response } = e as AxiosError<APIError>
         setRegisterFetchingState(FetchingState.Error)
-        enqueueSnackbar(
-          'Не получилось зарегистрировать пользователя\nПроверьте введённые данные',
-          {
+        response.data.forEach((e) =>
+          enqueueSnackbar(ERROR_MAP[e.errorCode], {
             variant: 'error',
-          }
+          })
         )
       }
     },
@@ -114,7 +116,7 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
       // FIXME: we actually need to show the errors because
       // it is unusual if a newly registered user would have problems
       // with password or login
-      enqueueSnackbar(AUTH_ERROR_MAP[7], {
+      enqueueSnackbar(ERROR_MAP[7], {
         variant: 'error',
       })
       dispatch(flushErroredLogin())

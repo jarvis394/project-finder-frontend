@@ -18,6 +18,8 @@ export const BUTTON_MAX_WIDTH = 328
 export const MIN_PASSWORD_LENGTH = 7
 export const PASSWORD_SPECIAL_SYMBOLS =
   '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789'.split('')
+export const LOGIN_REMOVE_SYMBOLS_REGEXP = /[^0-9A-Za-z_\-\s]+/gi
+
 export const MAX_SKILL_TAGS_DISPLAYED = 5
 export const MIN_SWIPE_WIDTH = 128
 export const CIRCLE_WIDTH = 96

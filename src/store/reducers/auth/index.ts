@@ -3,7 +3,7 @@ import produce from 'immer'
 import FetchingState from 'src/interfaces/FetchingState'
 import { AuthLoginRes } from 'project-finder-backend-types'
 import { AxiosError } from 'axios'
-import AuthLoginError from 'src/interfaces/AuthLoginError'
+import APIError from 'src/interfaces/APIError'
 
 const initialState: State = {
   accessToken: null,
@@ -13,7 +13,7 @@ const initialState: State = {
 }
 
 interface AuthErrorResponse {
-  error: AxiosError<AuthLoginError>
+  error: AxiosError<APIError>
 }
 
 export default produce((draft, { type, payload }) => {
