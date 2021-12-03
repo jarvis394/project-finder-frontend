@@ -8,7 +8,6 @@ import {
   Variants,
   animationControls,
 } from 'framer-motion'
-import ProjectCard from './ProjectCard'
 import {
   MIN_SWIPE_WIDTH,
   CIRCLE_WIDTH,
@@ -22,6 +21,7 @@ interface StackProps {
   onVote: (vote: boolean) => void
   loadMoreFunction: (endIndex: number) => Promise<unknown[]>
   initialItems: unknown[]
+  CardComponent: React.ElementType
 }
 
 const variants: Variants = {
@@ -57,6 +57,7 @@ const Stack: React.FC<StackProps> = ({
   onVote,
   loadMoreFunction,
   initialItems,
+  CardComponent,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshIndex, setRefreshIndex] = useState(0)
@@ -80,7 +81,7 @@ const Stack: React.FC<StackProps> = ({
   })
 
   const vote = (v: boolean) => {
-    /** 
+    /**
      * We do not need to have any logic in vote function
      * because it triggers on card animation end, which happens
      * only when user did a vote
@@ -165,9 +166,9 @@ const Stack: React.FC<StackProps> = ({
     }
   }
 
-  /** 
+  /**
    * Activated only after the card ended exit animation (got swiped away)
-   * Goes to the next card and fetches more if needed 
+   * Goes to the next card and fetches more if needed
    */
   const handleAnimationComplete = async (name: string) => {
     if (name === 'exit') {
@@ -258,7 +259,7 @@ const Stack: React.FC<StackProps> = ({
               circleControls={likeCircleControls}
               x={likeCircleX}
             />
-            <ProjectCard
+            <CardComponent
               onAnimationComplete={handleAnimationComplete}
               style={{ x: current.x, rotate: current.x }}
               transformTemplate={({ rotate, x, scale, y }) => {

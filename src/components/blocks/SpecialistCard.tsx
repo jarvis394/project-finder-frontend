@@ -1,13 +1,14 @@
 import { Grid, styled, Typography } from '@mui/material'
+import { Icon20PlaceOutline } from '@vkontakte/icons'
 import { DragHandlers, MotionProps } from 'framer-motion'
-import { Project } from 'project-finder-backend-types'
+import { User } from 'project-finder-backend-types'
 import React, { useCallback, useMemo, useState } from 'react'
 import { MAX_CARD_WIDTH, MAX_SKILL_TAGS_DISPLAYED } from 'src/config/constants'
 import Avatar from './Avatar'
 import Card from './Card'
 import SkillTag from './SkillTag'
 
-const Title = styled(Typography)(({ theme }) => ({
+const Fullname = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(1.5),
   fontSize: 24,
   fontFamily: 'Google Sans',
@@ -25,22 +26,22 @@ const Description = styled(Typography, {
   WebkitLineClamp: open ? 'none' : 8,
   overflow: open ? 'visible' : 'hidden',
 }))
-const SkillTagsContainer = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'isExpanded',
-})<{ isExpanded: boolean }>(({ theme, isExpanded }) => ({
+const SkillTagsContainer = styled('div')(({ theme }) => ({
   marginTop: theme.spacing(1),
-  flex: isExpanded ? 0 : 2,
   display: 'flex',
 }))
-const Location = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(2),
+const LocationContainer = styled('div')(({ theme }) => ({
+  marginTop: theme.spacing(1),
   display: 'flex',
-  color: theme.palette.text.secondary,
   flexDirection: 'row',
-  flexWrap: 'wrap',
+  width: '100%',
+  gap: theme.spacing(1),
 }))
-const Bullet = styled('div')(({ theme }) => ({
-  margin: theme.spacing(0, 1),
+const LocationTextContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  gap: theme.spacing(0.25),
 }))
 const CoverImageContainer = styled('div', {
   shouldForwardProp: (prop) => prop !== 'isExpanded',
@@ -68,33 +69,24 @@ const CoverImage = styled('img')({
   height: 'auto',
   width: '100%',
 })
-const ProfileContainer = styled('div')(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-}))
-const ProfileUsername = styled('div')(({ theme }) => ({
-  marginLeft: theme.spacing(1),
-  fontSize: 16,
-  fontFamily: 'Google Sans',
-  fontWeight: 500,
+const LocationIcon = styled(Icon20PlaceOutline)(({ theme }) => ({
+  color: theme.palette.secondary.main,
 }))
 const SectionHeader = styled(Typography)(({ theme }) => ({
   fontSize: 16,
   fontFamily: 'Google Sans',
   fontWeight: 500,
   color: theme.palette.text.primary,
-  marginTop: theme.spacing(2)
+  marginTop: theme.spacing(2),
 }))
 
-export interface ProjectCardProps {
-  data: Project
+export interface SpecialistCardProps {
+  data: User
   voteLike: () => unknown
   voteReject: () => unknown
 }
 
-const ProjectCard: React.FC<ProjectCardProps & MotionProps> = ({
+const SpecialistCard: React.FC<SpecialistCardProps & MotionProps> = ({
   data,
   voteLike,
   voteReject,
@@ -151,18 +143,20 @@ const ProjectCard: React.FC<ProjectCardProps & MotionProps> = ({
           )}
           <Avatar
             src={data.avatarUrl}
-            uid={data.title}
-            letter={data.title[0]}
+            uid={data.username}
+            letter={data.name[0]}
             sx={{
               zIndex: 1,
             }}
           />
-          <Title>{data.title}</Title>
+          <Fullname>
+            {data.name} {data.lastname}
+          </Fullname>
           <Description open={isExpanded} variant="body1" onClick={openCard}>
-            {data.description}
+            {data.information}
           </Description>
-          <SectionHeader>Требуемые навыки</SectionHeader>
-          <SkillTagsContainer isExpanded={isExpanded}>
+          <SectionHeader>Навыки</SectionHeader>
+          <SkillTagsContainer>
             <Grid spacing={1} container sx={{ height: 'fit-content' }}>
               {data.skillTags
                 .slice(
@@ -184,30 +178,23 @@ const ProjectCard: React.FC<ProjectCardProps & MotionProps> = ({
               )}
             </Grid>
           </SkillTagsContainer>
-          <Location>
-            {data.location}
-            {data.canRemote && (
-              <>
-                <Bullet>•</Bullet>
-                Можно удаленно
-              </>
-            )}
-          </Location>
-          <ProfileContainer>
-            <Avatar
-              size="small"
-              src={data.user.avatarUrl}
-              letter={data.user.name[0]}
-              uid={data.user.username}
-            />
-            <ProfileUsername>
-              {data.user.name} {data.user.lastname}
-            </ProfileUsername>
-          </ProfileContainer>
+          <SectionHeader>Локация</SectionHeader>
+          <LocationContainer>
+            <LocationIcon width={20} height={20} />
+            <LocationTextContainer>
+              <Typography>{data.location}</Typography>
+              <Typography
+                sx={{ color: (theme) => theme.palette.text.secondary }}
+              >
+                {/* {data.canRemote} */}
+                Может удаленно
+              </Typography>
+            </LocationTextContainer>
+          </LocationContainer>
         </>
       )}
     </Card>
   )
 }
 
-export default React.memo(ProjectCard)
+export default React.memo(SpecialistCard)

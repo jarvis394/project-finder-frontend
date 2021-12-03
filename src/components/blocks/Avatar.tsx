@@ -10,40 +10,47 @@ import randomGradient from 'random-gradient'
 import mixColors from 'src/utils/mixColors'
 import { SxProps } from '@mui/system'
 
-const StyledAvatar = styled('div')({
+type Size = 'default' | 'small'
+const AVATAR_SIZE_DEFAULT = 96
+const AVATAR_SIZE_SMALL = 28
+
+const StyledAvatar = styled('div')<{ size: Size }>(({ size }) => ({
   display: 'flex',
-  width: 96,
-  height: 96,
-  borderRadius: '50%',
+  width: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  height: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  borderRadius: size === 'default' ? '50%' : 6,
   textTransform: 'uppercase',
-  fontSize: 40,
+  fontSize: size === 'default' ? 40 : 12,
   fontWeight: 900,
   fontFamily: 'Google Sans',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
   userSelect: 'none',
-})
-const StyledImageAvatar = styled(MUIAvatar)({
+}))
+const StyledImageAvatar = styled(MUIAvatar)<{ size: Size }>(({ size }) => ({
   display: 'flex',
-  width: 96,
-  height: 96,
+  width: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  height: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  borderRadius: size === 'default' ? '50%' : 6,
   margin: 0,
   flexShrink: 0,
-})
+}))
 
 interface AvatarProps {
   src?: string
   uid?: string
   letter?: string
   sx?: SxProps<Theme>
+  size?: Size
 }
 
 const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({
   src,
-  uid,
+  uid = 'qwerty',
   letter,
   sx,
+  size = 'default',
   ...props
 }) => {
   const [isLoaded, setLoaded] = useState<boolean>(!!src)
@@ -57,11 +64,17 @@ const Avatar: React.FC<AvatarProps & StyledComponentProps> = ({
   const handleError = () => setLoaded(false)
 
   return !isLoaded || !src ? (
-    <StyledAvatar sx={{ background, color, ...sx }} {...props}>
+    <StyledAvatar size={size} sx={{ background, color, ...sx }} {...props}>
       {letter}
     </StyledAvatar>
   ) : (
-    <StyledImageAvatar sx={sx} src={src} onError={handleError} {...props} />
+    <StyledImageAvatar
+      size={size}
+      sx={sx}
+      src={src}
+      onError={handleError}
+      {...props}
+    />
   )
 }
 

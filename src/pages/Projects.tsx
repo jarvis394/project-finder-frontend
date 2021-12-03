@@ -18,6 +18,7 @@ import {
   ProjectBase,
   ProjectListSuitableRes,
 } from 'project-finder-backend-types'
+import ProjectCard from 'src/components/blocks/ProjectCard'
 
 const Wrapper = styled(motion.div)`
   position: relative;
@@ -36,26 +37,27 @@ const getRandomProjectData = () => ({
   title: 'Project Finder',
   location: 'ул. Колотушкина, д. 13',
   canRemote: true,
+  coverUrl: null,
   description:
     'Требуются мобильные разработчики, желательно со стажем коммерческой разработки не менее 80 лет. Обязательно знание PowerPoint.',
   skillTags: [
     {
-      name: 'Express',
+      label: 'Express',
     },
     {
-      name: 'Django',
+      label: 'Django',
     },
     {
-      name: 'Django',
+      label: 'Django',
     },
     {
-      name: 'Python',
+      label: 'Python',
     },
     {
-      name: 'Django',
+      label: 'Django',
     },
     {
-      name: 'Django',
+      label: 'Django',
     },
   ],
   slug: 'project-finder',
@@ -109,6 +111,7 @@ const Projects = () => {
     <>
       <Wrapper style={{ background }}>
         <Stack
+          CardComponent={ProjectCard}
           onTransformChange={handleTransformChange}
           onVote={handleVote}
           loadMoreFunction={loadMoreItems}

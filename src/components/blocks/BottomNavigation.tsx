@@ -9,6 +9,7 @@ import bottomNavigationTabs from 'src/config/bottomNavigationTabs'
 import { BOTTOM_BAR_HEIGHT } from 'src/config/constants'
 import { useNavigate } from 'react-router-dom'
 import { useRoute } from 'src/hooks'
+import { Route } from 'src/config/routes'
 
 const Offset = styled('div')({ height: BOTTOM_BAR_HEIGHT })
 const BottomNavigationPaper = styled(Paper)(({ theme }) => ({
@@ -92,10 +93,13 @@ const BottomNavigationActionIconUnmemoized: React.FC<{
 const BottomNavigationActionIcon = React.memo(
   BottomNavigationActionIconUnmemoized
 )
+const matchRoute = (route: Route) => {
+  return bottomNavigationTabs.findIndex((e) => e.route === route.alias) || 0
+}
 
 const BottomNavigation = () => {
   const route = useRoute()
-  const [value, setValue] = useState<number>(0)
+  const [value, setValue] = useState<number>(matchRoute(route))
   const navigate = useNavigate()
   const handleChange = (
     _event: React.ChangeEvent<unknown>,

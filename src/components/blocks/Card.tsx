@@ -34,6 +34,7 @@ const StyledCard = styled(motion.div)(({ theme }) => ({
   boxShadow: '0 0 24px 0 ' + alpha(theme.palette.text.primary, 0.15),
   borderRadius: 24,
   maxWidth: MAX_CARD_WIDTH,
+  overflow: 'hidden',
 }))
 const Content = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
@@ -42,6 +43,7 @@ const Content = styled('div')(({ theme }) => ({
   maxWidth: MAX_CARD_WIDTH,
   borderRadius: 12,
   height: '100%',
+  position: 'relative',
 }))
 const DialogAppBar = styled(AppBar)(({ theme }) => ({
   minHeight: '56px !important',
@@ -156,6 +158,7 @@ const Card: React.FC<CardProps & MotionProps> = ({
         </DialogAppBar>
         <Offset />
         <Content>{children({ isExpanded: true })}</Content>
+        <Offset />
         <CardDialogActions>
           <Grid container>
             <Grid
