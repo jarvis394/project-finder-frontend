@@ -94,7 +94,9 @@ const BottomNavigationActionIcon = React.memo(
   BottomNavigationActionIconUnmemoized
 )
 const matchRoute = (route: Route) => {
-  return bottomNavigationTabs.findIndex((e) => e.route === route.alias) || 0
+  return route
+    ? bottomNavigationTabs.findIndex((e) => e.route === route.alias)
+    : -1
 }
 
 const BottomNavigation = () => {
@@ -111,7 +113,7 @@ const BottomNavigation = () => {
     }
   }
 
-  if (!route || route.shouldHideInterface) return null
+  if (!route || route.shouldHideInterface || value < 0) return null
 
   return (
     <>

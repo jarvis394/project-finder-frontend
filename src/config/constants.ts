@@ -7,6 +7,9 @@ export const EMOTION_CACHE_KEY = 'pf'
 /** App localStorage keys */
 export const APP_KEYS_PREFIX = 'pf_'
 export const NEEDS_UPDATE_KEY = APP_KEYS_PREFIX + 'needsUpdate'
+export const ACCESS_TOKEN_KEY = APP_KEYS_PREFIX + 'accessToken'
+export const REFRESH_TOKEN_KEY = APP_KEYS_PREFIX + 'refreshToken'
+export const TOKEN_EXPIRE_KEY = APP_KEYS_PREFIX + 'tokenExpire'
 
 export const BOTTOM_BAR_HEIGHT = 56
 export const CHROME_ADDRESS_BAR_HEIGHT = 56

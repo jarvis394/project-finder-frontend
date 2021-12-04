@@ -1,10 +1,9 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from 'axios'
+import { AuthLoginRes } from 'project-finder-backend-types'
 import { API_URL } from 'src/config/constants'
+import { axiosInstance } from '.'
 
-const CancelToken = axios.CancelToken
-const source = CancelToken.source()
-
-interface Arguments {
+interface MakeRequestProps {
   /** API method as an URL path */
   path: string
 
@@ -18,12 +17,11 @@ interface Arguments {
 export default async <T = never>({
   path,
   requestOptions,
-}: Arguments): Promise<T> => {
+}: MakeRequestProps): Promise<T> => {
   return (
-    await axios({
+    await axiosInstance({
       method: requestOptions?.method || 'get',
-      url: API_URL + path,
-      cancelToken: source.token,
+      url: path,
       ...requestOptions,
     })
   ).data as T
