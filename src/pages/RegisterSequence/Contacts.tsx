@@ -88,7 +88,6 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
         })
         setRegisterResponseData(registerResponse)
         setRegisterFetchingState(FetchingState.Fetched)
-        console.log(registerResponse)
         dispatch(
           loginAction({ login: values.login, password: values.password })
         )

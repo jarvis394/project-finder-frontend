@@ -27,6 +27,7 @@ dayjs.updateLocale('ru', {
   },
 })
 
+setupInterceptors(store)
 ReactDOM.render(
   <Provider store={store}>
     <Router>
@@ -36,4 +37,3 @@ ReactDOM.render(
   document.getElementById('root')
 )
 serviceWorker.register(serviceWorkerConfig)
-setupInterceptors(store)

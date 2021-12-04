@@ -118,8 +118,6 @@ const Stack: React.FC<StackProps> = ({
 
   const showNextItem = useCallback(
     (index: number) => {
-      console.log('show new item at index:', index)
-
       // Update current item and global index
       setRefreshIndex((prev) => prev + 1)
       setCurrent({
@@ -181,7 +179,6 @@ const Stack: React.FC<StackProps> = ({
         setItems(newItems)
         setIndex(0)
         setIsLoading(false)
-        console.log('set new items', newItems, items)
       } else {
         setIndex((prev) => prev + 1)
       }

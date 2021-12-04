@@ -38,8 +38,13 @@ const setup = (store: Store<RootState>) => {
         !urlsWithoutAuth.some((e) => e === originalConfig.url) &&
         err.response
       ) {
+        // Invalid token
+        if (err.response.data.some((e) => e.errorCode === 1)) {
+          dispatch(logout() as unknown as AnyAction)
+          return Promise.reject(null)
+        }
         // Access token was expired
-        if (
+        else if (
           err.response.data.some((e) => e.errorCode === 3) &&
           !originalConfig._retry
         ) {

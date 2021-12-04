@@ -61,7 +61,6 @@ const Specialists = () => {
     x.set(newX.get())
   }
   const handleVote = (vote: boolean) => {
-    console.log('Got vote:', vote)
     animate(x, vote ? MIN_SWIPE_WIDTH : -MIN_SWIPE_WIDTH, {
       onComplete: () => {
         animate(x, 0)
@@ -69,7 +68,6 @@ const Specialists = () => {
     })
   }
   const loadMoreItems = async (endIndex: number) => {
-    console.log('Loading more items from index', endIndex)
     return new Promise<unknown[]>((resolve) => {
       setTimeout(
         () =>

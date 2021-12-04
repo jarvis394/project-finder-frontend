@@ -4,10 +4,10 @@ import {
   BottomNavigationAction as BottomNavigationMaterialActionUnstyled,
 } from '@mui/material'
 import { alpha, styled } from '@mui/material/styles'
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import bottomNavigationTabs from 'src/config/bottomNavigationTabs'
 import { BOTTOM_BAR_HEIGHT } from 'src/config/constants'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useRoute } from 'src/hooks'
 import { Route } from 'src/config/routes'
 
@@ -101,34 +101,28 @@ const matchRoute = (route: Route) => {
 
 const BottomNavigation = () => {
   const route = useRoute()
-  const [value, setValue] = useState<number>(matchRoute(route))
-  const navigate = useNavigate()
-  const handleChange = (
-    _event: React.ChangeEvent<unknown>,
-    newValue: number
-  ) => {
-    if (newValue !== value) {
-      setValue(newValue)
-      navigate(bottomNavigationTabs[newValue].to)
-    }
-  }
+  const value = useMemo(() => matchRoute(route), [route])
+  const shouldHide = useMemo(
+    () => !route || route?.shouldHideInterface || value < 0,
+    [route, route?.shouldHideInterface, value]
+  )
 
-  if (!route || route.shouldHideInterface || value < 0) return null
+  if (shouldHide) return null
 
   return (
     <>
       <BottomNavigationPaper>
-        <BottomNavigationMaterial
-          value={value}
-          onChange={handleChange}
-          showLabels
-        >
+        <BottomNavigationMaterial value={value} showLabels>
           {bottomNavigationTabs.map((e, i) => (
             <BottomNavigationMaterialAction
               key={i}
               disableRipple
               classes={{ label: 'label' }}
               label={e.label}
+              LinkComponent={Link}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              to={e.to}
               icon={
                 <BottomNavigationActionIcon
                   selected={i === value}

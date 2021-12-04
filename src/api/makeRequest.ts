@@ -1,6 +1,4 @@
 import { AxiosRequestConfig } from 'axios'
-import { AuthLoginRes } from 'project-finder-backend-types'
-import { API_URL } from 'src/config/constants'
 import { axiosInstance } from '.'
 
 interface MakeRequestProps {
