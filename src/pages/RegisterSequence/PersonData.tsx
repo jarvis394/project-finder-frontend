@@ -11,24 +11,22 @@ import {
   RadioGroup,
 } from '@mui/material'
 import React, { useEffect } from 'react'
-import Input from 'src/components/blocks/Input'
 import { BUTTON_MAX_WIDTH } from 'src/config/constants'
 import { Icon24ArrowRightOutline } from '@vkontakte/icons'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm, SubmitHandler, useWatch } from 'react-hook-form'
 import UploadAvatar from 'src/components/blocks/UploadAvatar'
-import dayjs from 'dayjs'
+import { Dayjs } from 'dayjs'
+import { DatePicker, LocalizationProvider } from '@mui/lab'
+import AdapterDayjs from '@mui/lab/AdapterDayjs'
+import TextField from 'src/components/blocks/TextField'
 
 interface FormInput {
   name: string
   lastname: string
   gender: 'male' | 'female'
-  birthDate: {
-    day: number
-    month: number
-    year: number
-  }
+  birthDate: Dayjs
   location: string
 }
 
@@ -70,45 +68,54 @@ const FormGroup = styled('div')(({ theme }) => ({
 }))
 
 const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
-  const { register, handleSubmit, setError, formState, clearErrors } =
-    useForm<FormInput>({
-      shouldFocusError: true,
-    })
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState,
+    clearErrors,
+    control,
+    setValue,
+  } = useForm<FormInput>({
+    shouldFocusError: true,
+  })
+  const birthDate = useWatch({
+    control,
+    name: 'birthDate',
+    defaultValue: null,
+  })
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<FormInput> = (data) => {
     clearErrors()
-    const birthDate = dayjs()
-      .date(data.birthDate.day)
-      .month(Number(data.birthDate.month) - 1)
-      .year(data.birthDate.year)
-      .hour(0)
-      .minute(0)
-      .second(0)
-      .millisecond(0)
-
-    if (birthDate.isValid()) {
-      setValues((prev) => ({
-        ...prev,
-        birthDate: birthDate.format(),
-        name: data.name,
-        lastname: data.lastname,
-        location: data.location,
-        gender: data.gender === 'female',
-      }))
-      navigate('/register?step=skills')
-    } else {
-      setError('birthDate.day', {
-        message: 'Некорректная дата',
+    setValues((prev) => ({
+      ...prev,
+      // We assume that the date given in `data` is valid Datejs
+      // because we trust @mui to validate and parse user input```
+      birthDate: (data.birthDate as Dayjs).format(),
+      name: data.name,
+      lastname: data.lastname,
+      location: data.location,
+      gender: data.gender === 'female',
+    }))
+    navigate('/register?step=skills')
+  }
+  const handleDateChange = (newValue: Dayjs) => {
+    setValue('birthDate', newValue)
+  }
+  const handleDateError = (error: unknown) => {
+    if (error)
+      setError('birthDate', {
         type: 'value',
+        message: 'Incorrect value',
       })
-    }
+    else clearBirthDateErrors()
   }
   const clearBirthDateErrors = () =>
-    formState.errors && clearErrors('birthDate.day')
+    formState.errors && clearErrors('birthDate')
 
   useEffect(() => {
     if (!values.login) return navigate('/register')
-  }, [])
+  }, [values.login, navigate])
 
   return (
     <Root>
@@ -123,16 +130,19 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
         >
           <UploadAvatar />
         </Box>
-        <Input
+        <TextField
           {...register('name', { required: true })}
+          autoFocus
           placeholder="Имя"
           type="text"
+          required
           autoComplete="given-name"
         />
-        <Input
+        <TextField
           {...register('lastname', { required: true })}
           placeholder="Фамилия"
           type="text"
+          required
           autoComplete="family-name"
         />
         <FormControl component="fieldset">
@@ -155,41 +165,27 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
           </RadioGroup>
         </FormControl>
         <FormGroup>
-          <HintLabel>День рождения</HintLabel>
-          <RowContainer>
-            <Input
-              {...register('birthDate.day', {
-                required: true,
-                onChange: clearBirthDateErrors,
-              })}
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              placeholder="День"
-              autoComplete="bday-day"
+          <FormLabel sx={{ fontSize: 14, ml: 1 }} component="legend">
+            День рождения
+          </FormLabel>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disableFuture
+              mask="__.__.____"
+              value={birthDate}
+              onChange={handleDateChange}
+              onError={handleDateError}
+              renderInput={(props) => (
+                <TextField autoComplete="bday" required {...props} />
+              )}
             />
-            <Input
-              {...register('birthDate.month', {
-                required: true,
-                onChange: clearBirthDateErrors,
-              })}
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              placeholder="Месяц"
-              autoComplete="bday-month"
-            />
-            <Input
-              {...register('birthDate.year', {
-                required: true,
-                onChange: clearBirthDateErrors,
-              })}
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              placeholder="Год"
-              autoComplete="bday-year"
-            />
-          </RowContainer>
+          </LocalizationProvider>
         </FormGroup>
-        <Input
+        <TextField
           {...register('location', { required: true })}
           placeholder="Место проживания"
           type="text"
+          required
           autoComplete="country-name"
         />
         <Button
@@ -201,17 +197,6 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
         >
           Продолжить
         </Button>
-        {formState.errors?.birthDate?.day?.type === 'value' && (
-          <Typography
-            sx={{
-              color: (theme) => theme.palette.error.main,
-              fontSize: 14,
-              ml: 1,
-            }}
-          >
-            Введите правильную дату
-          </Typography>
-        )}
       </ColumnContainer>
     </Root>
   )

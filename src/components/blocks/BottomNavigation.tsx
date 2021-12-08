@@ -104,7 +104,7 @@ const BottomNavigation = () => {
   const value = useMemo(() => matchRoute(route), [route])
   const shouldHide = useMemo(
     () => !route || route?.shouldHideInterface || value < 0,
-    [route, route?.shouldHideInterface, value]
+    [route, value]
   )
 
   if (shouldHide) return null

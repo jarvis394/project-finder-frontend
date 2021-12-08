@@ -1,12 +1,14 @@
 import React from 'react'
 import { styled, alpha, ButtonBase } from '@mui/material'
 import { Icon24CameraOutline } from '@vkontakte/icons'
+import { COVER_MAX_HEIGHT, CARD_MAX_WIDTH } from 'src/config/constants'
 
-const StyledAvatar = styled(ButtonBase)(({ theme }) => ({
+const StyledCover = styled(ButtonBase)(({ theme }) => ({
   display: 'flex',
-  width: 96,
-  height: 96,
-  borderRadius: '50% !important',
+  height: 'auto',
+  width: '100%',
+  aspectRatio: `${CARD_MAX_WIDTH - 32}/${COVER_MAX_HEIGHT}`,
+  borderRadius: '12px !important',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
@@ -17,12 +19,12 @@ const StyledCameraIcon = styled(Icon24CameraOutline)(({ theme }) => ({
   color: alpha(theme.palette.text.primary, 0.5),
 }))
 
-const UploadAvatar = ({ ...props }) => {
+const UploadCover = ({ ...props }) => {
   return (
-    <StyledAvatar {...props}>
+    <StyledCover {...props}>
       <StyledCameraIcon width={32} height={32} />
-    </StyledAvatar>
+    </StyledCover>
   )
 }
 
-export default UploadAvatar
+export default UploadCover

@@ -3,8 +3,10 @@ import {
   PROFILE_FETCH,
   PROFILE_FETCH_REJECTED,
   PROFILE_FETCH_FULFILLED,
+  PROFILE_SET_USER,
 } from 'src/store/reducers/profile/types'
 import { Dispatch } from 'redux'
+import { User } from 'project-finder-backend-types'
 
 export const getMe = () => async (dispatch: Dispatch) => {
   dispatch({ type: PROFILE_FETCH })
@@ -22,4 +24,8 @@ export const getMe = () => async (dispatch: Dispatch) => {
       payload: { error },
     })
   }
+}
+
+export const setUser = (user: User) => async (dispatch: Dispatch) => {
+  dispatch({ type: PROFILE_SET_USER, payload: user })
 }

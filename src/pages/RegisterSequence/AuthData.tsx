@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import Input from 'src/components/blocks/Input'
+import TextField from 'src/components/blocks/TextField'
 import {
   BUTTON_MAX_WIDTH,
   MIN_PASSWORD_LENGTH,
@@ -27,6 +27,7 @@ import { useSnackbar } from 'notistack'
 import { VisibilityRounded, VisibilityOffRounded } from '@mui/icons-material'
 import ToggleButton from 'material-ui-toggle-icon'
 import { Link } from 'react-router-dom'
+import PasswordTextField from 'src/components/blocks/PasswordTextField'
 
 const Root = styled('div')({
   display: 'flex',
@@ -97,7 +98,6 @@ const AuthData: React.FC<StepProps> = ({ setValues }) => {
   const loginInputRef = useRef<HTMLInputElement>()
   const { enqueueSnackbar } = useSnackbar()
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const doesPasswordExceedsMinLength = useMemo(
     () => password.length > MIN_PASSWORD_LENGTH,
     [password]
@@ -107,9 +107,6 @@ const AuthData: React.FC<StepProps> = ({ setValues }) => {
     [password]
   )
   const navigate = useNavigate()
-  const handleShowPasswordClick = () => {
-    setShowPassword((prev) => !prev)
-  }
   const goNext: FormEventHandler<HTMLFormElement> = useCallback(
     (e) => {
       e.preventDefault()
@@ -136,7 +133,7 @@ const AuthData: React.FC<StepProps> = ({ setValues }) => {
         })
       }
     },
-    [password]
+    [password, doesPasswordExceedsMinLength, doesPasswordContainSpecialSymbols]
   )
   const handlePasswordInputChange: React.ChangeEventHandler<HTMLInputElement> =
     (e) => {
@@ -159,31 +156,26 @@ const AuthData: React.FC<StepProps> = ({ setValues }) => {
         мечты
       </SubheaderText>
       <ColumnContainer onSubmit={goNext} autoComplete="on">
-        <Input
+        <TextField
           required
+          autoFocus
           inputRef={loginInputRef}
           placeholder="Логин"
           type="text"
+          sx={{
+            maxWidth: BUTTON_MAX_WIDTH,
+          }}
         />
-        <Input
+        <PasswordTextField
           required
+          autoFocus
+          fullWidth
           value={password}
           onChange={handlePasswordInputChange}
-          placeholder="Придумайте пароль"
-          type={showPassword ? 'text' : 'password'}
-          sx={{ padding: (theme) => theme.spacing(0.5, 2) }}
-          endAdornment={
-            <IconButton
-              sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.39) }}
-              onClick={handleShowPasswordClick}
-            >
-              <ToggleButton
-                on={showPassword}
-                onIcon={<VisibilityRounded />}
-                offIcon={<VisibilityOffRounded />}
-              />
-            </IconButton>
-          }
+          placeholder="Пароль"
+          sx={{
+            maxWidth: BUTTON_MAX_WIDTH,
+          }}
         />
         <PasswordRequirementsContainer>
           <PasswordRequirementsItem>

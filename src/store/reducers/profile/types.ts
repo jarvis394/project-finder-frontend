@@ -6,6 +6,7 @@ export const PROFILE_PREFIX = 'PROFILE_'
 export const PROFILE_FETCH = PROFILE_PREFIX + 'FETCH'
 export const PROFILE_FETCH_FULFILLED = PROFILE_PREFIX + 'FETCH_FULFILLED'
 export const PROFILE_FETCH_REJECTED = PROFILE_PREFIX + 'FETCH_REJECTED'
+export const PROFILE_SET_USER = PROFILE_PREFIX + 'SET_USER'
 export interface State {
   data: User
   state: FetchingState

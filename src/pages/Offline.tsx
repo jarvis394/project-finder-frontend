@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Fab, styled, alpha } from '@mui/material'
 import Wifi from 'src/components/svg/Wifi'
-import { MAX_CARD_WIDTH } from 'src/config/constants'
+import { CARD_MAX_WIDTH } from 'src/config/constants'
 
 const Container = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -23,7 +23,7 @@ const BottomLayout = styled('div')(({ theme }) => ({
   alignItems: 'left',
   padding: '16px',
   margin: '0 auto',
-  maxWidth: MAX_CARD_WIDTH,
+  maxWidth: CARD_MAX_WIDTH,
   [theme.breakpoints.up('sm')]: {
     bottom: 'auto'
   }

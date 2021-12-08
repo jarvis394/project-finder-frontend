@@ -7,7 +7,7 @@ import {
   Backdrop,
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import Input from 'src/components/blocks/Input'
+import TextField from 'src/components/blocks/TextField'
 import { BUTTON_MAX_WIDTH } from 'src/config/constants'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
@@ -24,6 +24,7 @@ import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
 import { ERROR_MAP } from 'src/config/errorCodes'
 import { AxiosError } from 'axios'
 import APIError from 'src/interfaces/APIError'
+import { setUser } from 'src/store/actions/profile'
 
 interface FormInput {
   email: string
@@ -91,6 +92,7 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
         dispatch(
           loginAction({ login: values.login, password: values.password })
         )
+        dispatch(setUser(registerResponseData))
       } catch (e) {
         const { response } = e as AxiosError<APIError>
         setRegisterFetchingState(FetchingState.Error)
@@ -101,7 +103,16 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
         )
       }
     },
-    [values]
+    [
+      values.birthDate,
+      values.gender,
+      values.lastname,
+      values.location,
+      values.login,
+      values.name,
+      values.password,
+      values.skillTags,
+    ]
   )
 
   useEffect(() => {
@@ -124,7 +135,7 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
 
   useEffect(() => {
     if (!values.login) return navigate('/register')
-  }, [])
+  }, [values.login])
 
   if (!values.login) return null
 
@@ -153,18 +164,21 @@ const Contacts: React.FC<StepProps> = ({ values, setValues }) => {
         >
           <Avatar uid={values.login || 'a'} letter={(values.name || 'a')[0]} />
         </Box>
-        <Input
+        <TextField
           {...register('email', { required: true })}
+          autoFocus
+          required
           placeholder="Электропочта"
           type="text"
           autoComplete="email"
         />
-        <Input
+        <TextField
           {...register('telegram', { required: true })}
           placeholder="Телеграм"
+          required
           type="text"
         />
-        <Input
+        <TextField
           {...register('website', { required: false })}
           placeholder="Веб-сайт"
           type="text"

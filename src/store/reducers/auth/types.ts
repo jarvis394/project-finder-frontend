@@ -14,4 +14,5 @@ export interface State {
   tokenExpire: number
   state: FetchingState
   fetchError: APIError
+  isLoggedIn: boolean
 }

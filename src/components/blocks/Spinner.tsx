@@ -1,6 +1,8 @@
 import React from 'react'
-import { styled, keyframes } from '@mui/material'
+import { styled, keyframes, Theme } from '@mui/material'
 import { Icon24Spinner } from '@vkontakte/icons'
+import { Icon24SpinnerProps } from '@vkontakte/icons/dist/24/spinner'
+import { SxProps } from '@mui/system'
 
 const spinnerAnimation = keyframes`
   0% {
@@ -17,8 +19,10 @@ const StyledSpinner = styled(Icon24Spinner)(({ theme }) => ({
   color: theme.palette.text.primary,
 }))
 
-const Spinner = () => {
-  return <StyledSpinner />
+const Spinner: React.FC<Icon24SpinnerProps & SxProps<Theme>> = ({
+  ...props
+}) => {
+  return <StyledSpinner {...props} />
 }
 
 export default Spinner

@@ -2,7 +2,11 @@ import { Grid, styled, Typography } from '@mui/material'
 import { DragHandlers, MotionProps } from 'framer-motion'
 import { Project } from 'project-finder-backend-types'
 import React, { useCallback, useMemo, useState } from 'react'
-import { MAX_CARD_WIDTH, MAX_SKILL_TAGS_DISPLAYED } from 'src/config/constants'
+import {
+  COVER_MAX_HEIGHT,
+  CARD_MAX_WIDTH,
+  MAX_SKILL_TAGS_DISPLAYED,
+} from 'src/config/constants'
 import Avatar from './Avatar'
 import Card from './Card'
 import SkillTag from './SkillTag'
@@ -47,7 +51,7 @@ const CoverImageContainer = styled('div', {
 })<{ isExpanded: boolean }>(({ theme, isExpanded }) => ({
   width: '100%',
   background: theme.palette.action.focus,
-  height: 172,
+  height: COVER_MAX_HEIGHT,
   position: 'absolute',
   left: 0,
   top: 0,
@@ -55,7 +59,7 @@ const CoverImageContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   borderRadius: 0,
-  [theme.breakpoints.up(MAX_CARD_WIDTH)]: {
+  [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
     borderRadius: isExpanded ? 12 : 0,
   },
 }))
@@ -85,7 +89,7 @@ const SectionHeader = styled(Typography)(({ theme }) => ({
   fontFamily: 'Google Sans',
   fontWeight: 500,
   color: theme.palette.text.primary,
-  marginTop: theme.spacing(2)
+  marginTop: theme.spacing(2),
 }))
 
 export interface ProjectCardProps {
@@ -110,7 +114,7 @@ const ProjectCard: React.FC<ProjectCardProps & MotionProps> = ({
   const closeCard = () => setOpen(false)
   const shouldShowAndMoreSkillTag = useMemo(
     () => data.skillTags.length > MAX_SKILL_TAGS_DISPLAYED,
-    [data.skillTags, isOpen]
+    [data.skillTags]
   )
   const skillTagsOverflowCount = useMemo(
     () => data.skillTags.length - MAX_SKILL_TAGS_DISPLAYED,

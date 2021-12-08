@@ -7,13 +7,12 @@ import {
   alpha,
 } from '@mui/material'
 import React, { FormEventHandler, useEffect, useRef, useState } from 'react'
-import Input from 'src/components/blocks/Input'
+import TextField from 'src/components/blocks/TextField'
 import { BUTTON_MAX_WIDTH } from 'src/config/constants'
 import Avatar from 'src/components/blocks/Avatar'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
 import { VisibilityOffRounded, VisibilityRounded } from '@mui/icons-material'
-import ToggleButton from 'material-ui-toggle-icon'
 import { useDispatch } from 'react-redux'
 import { flushErroredLogin, login as loginAction } from 'src/store/actions/auth'
 import { useSelector } from 'src/hooks'
@@ -21,6 +20,7 @@ import FetchingState from 'src/interfaces/FetchingState'
 import { useSnackbar } from 'notistack'
 import { ERROR_MAP } from 'src/config/errorCodes'
 import { LoadingButton } from '@mui/lab'
+import PasswordTextField from 'src/components/blocks/PasswordTextField'
 
 const Root = styled('div')({
   display: 'flex',
@@ -54,7 +54,6 @@ const SubheaderText = styled(Typography)(({ theme }) => ({
 }))
 
 const Password: React.FC<StepProps> = ({ values, setValues }) => {
-  const [showPassword, setShowPassword] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const inputRef = useRef<HTMLInputElement>()
   const navigate = useNavigate()
@@ -72,11 +71,10 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
       dispatch(loginAction({ login: values.login, password }))
     }
   }
-  const handleShowPasswordClick = () => setShowPassword((prev) => !prev)
 
   useEffect(() => {
     if (!values.login) navigate('/login')
-  }, [])
+  }, [values.login])
 
   useEffect(() => {
     if (authResponseFetchingState === FetchingState.Fetched) {
@@ -106,24 +104,22 @@ const Password: React.FC<StepProps> = ({ values, setValues }) => {
         Введите свой логин или зарегестрируйтесь, чтобы найти свой проект мечты
       </SubheaderText>
       <ColumnContainer onSubmit={goNext} autoComplete="on">
-        <Input
+        <PasswordTextField
           required
+          autoFocus
+          fullWidth
           inputRef={inputRef}
           placeholder="Пароль"
-          type={showPassword ? 'text' : 'password'}
-          sx={{ padding: (theme) => theme.spacing(0.5, 2) }}
-          endAdornment={
-            <IconButton
-              sx={{ color: (theme) => alpha(theme.palette.text.primary, 0.39) }}
-              onClick={handleShowPasswordClick}
-            >
-              <ToggleButton
-                on={showPassword}
-                onIcon={<VisibilityRounded />}
-                offIcon={<VisibilityOffRounded />}
-              />
-            </IconButton>
-          }
+          sx={{
+            maxWidth: BUTTON_MAX_WIDTH,
+          }}
+        />
+        {/** This input helps browser to autocomplete user data */}
+        <TextField
+          type="text"
+          autoComplete="username"
+          defaultValue={values.login}
+          sx={{ display: 'none' }}
         />
         <LoadingButton
           fullWidth

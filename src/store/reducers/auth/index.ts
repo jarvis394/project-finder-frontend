@@ -28,6 +28,7 @@ const initialState: State = {
   ...initialAuthData,
   state: FetchingState.Idle,
   fetchError: null,
+  isLoggedIn: !!initialAuthData.accessToken,
 }
 
 interface AuthErrorResponse {

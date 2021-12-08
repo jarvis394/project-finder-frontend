@@ -1,12 +1,12 @@
 import { Button, styled, Typography, darken } from '@mui/material'
 import React, { FormEventHandler, useRef } from 'react'
-import Input from 'src/components/blocks/Input'
 import { BUTTON_MAX_WIDTH } from 'src/config/constants'
 import { Icon24ArrowRightOutline } from '@vkontakte/icons'
 import Avatar from 'src/components/blocks/Avatar'
 import { StepProps } from '.'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
+import TextField from 'src/components/blocks/TextField'
 
 const Root = styled('div')({
   display: 'flex',
@@ -77,13 +77,19 @@ const Login: React.FC<StepProps> = ({ setValues }) => {
         Введите свой логин или зарегестрируйтесь, чтобы найти свой проект мечты
       </SubheaderText>
       <ColumnContainer onSubmit={goNext} autoComplete="on">
-        <Input
+        <TextField
           required
+          autoFocus
           inputRef={inputRef}
           placeholder="Логин"
           type="text"
           autoComplete="username"
+          sx={{
+            maxWidth: BUTTON_MAX_WIDTH,
+          }}
         />
+        {/** This input helps browser to autocomplete user data */}
+        <TextField type="password" sx={{ display: 'none' }} />
         <Button
           fullWidth
           type="submit"

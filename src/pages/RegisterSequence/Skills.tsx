@@ -48,7 +48,7 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
 
   useEffect(() => {
     if (!values.login) return navigate('/register')
-  }, [])
+  }, [values.login])
 
   return (
     <Root>
@@ -65,6 +65,7 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
         </Box>
         <Autocomplete
           multiple
+          autoHighlight
           value={value}
           onChange={(_, newValue) => {
             setValue(newValue as SkillTagNames[])
@@ -77,7 +78,7 @@ const PersonData: React.FC<StepProps> = ({ values, setValues }) => {
           options={SKILL_TAGS}
           filterSelectedOptions
           renderInput={(params) => (
-            <TextField {...params} name="skills" label="Навыки" />
+            <TextField {...params} autoFocus name="skills" label="Навыки" />
           )}
         />
         <Button

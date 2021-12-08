@@ -113,7 +113,7 @@ const Stack: React.FC<StackProps> = ({
       likeCircleX.set(newLikeCircleX)
       rejectCircleX.set(newRejectCircleX)
     },
-    [isCardShown]
+    [isCardShown, likeCircleX, onTransformChange, rejectCircleX]
   )
 
   const showNextItem = useCallback(

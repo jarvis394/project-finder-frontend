@@ -7,6 +7,7 @@ import Projects from 'src/pages/Projects'
 import Specialists from 'src/pages/Specialists'
 import Offline from 'src/pages/Offline'
 import RegisterSequence from 'src/pages/RegisterSequence/index'
+import ProfileEdit from 'src/pages/ProfileEdit'
 
 export interface Route {
   path: string
@@ -58,6 +59,13 @@ export const routes: Route[] = [
     title: 'Авторизация',
     shouldHideInterface: true,
     alias: 'login',
+  },
+  {
+    path: '/profile/edit',
+    element: <ProfileEdit />,
+    title: 'Редактирование профиля',
+    shouldHideInterface: true,
+    alias: 'profileEdit',
   },
   {
     path: '/offline',

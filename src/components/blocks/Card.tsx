@@ -16,7 +16,7 @@ import {
 import {
   BOTTOM_BAR_HEIGHT,
   TOP_CARD_MARGIN,
-  MAX_CARD_WIDTH,
+  CARD_MAX_WIDTH,
 } from 'src/config/constants'
 import CloseIcon from '@mui/icons-material/CloseRounded'
 import { Icon24Cancel } from '@vkontakte/icons'
@@ -33,14 +33,14 @@ const StyledCard = styled(motion.div)(({ theme }) => ({
   display: 'flex',
   boxShadow: '0 0 24px 0 ' + alpha(theme.palette.text.primary, 0.15),
   borderRadius: 24,
-  maxWidth: MAX_CARD_WIDTH,
+  maxWidth: CARD_MAX_WIDTH,
   overflow: 'hidden',
 }))
 const Content = styled('div')(({ theme }) => ({
   padding: theme.spacing(2),
   flexDirection: 'column',
   display: 'flex',
-  maxWidth: MAX_CARD_WIDTH,
+  maxWidth: CARD_MAX_WIDTH,
   borderRadius: 12,
   height: '100%',
   position: 'relative',
@@ -74,7 +74,7 @@ const CardDialogActions = styled(DialogActions)(({ theme }) => ({
   width: '100%',
   position: 'fixed',
   bottom: 0,
-  maxWidth: MAX_CARD_WIDTH,
+  maxWidth: CARD_MAX_WIDTH,
 }))
 const CardDialogActionButtonLabel = styled(Typography)(({ theme }) => ({
   marginLeft: theme.spacing(1.5),
