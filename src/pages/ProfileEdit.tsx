@@ -17,6 +17,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  useScrollTrigger,
 } from '@mui/material'
 import {
   Icon20Check as SubmitIcon,
@@ -50,12 +51,16 @@ interface FormInput {
   location: string
 }
 
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
+const StyledAppBar = styled(AppBar, {
+  shouldForwardProp: (prop) => prop !== 'elevated',
+})<{ elevated: boolean }>(({ theme, elevated }) => ({
   minHeight: '56px !important',
   height: '56px !important',
   color: theme.palette.text.primary,
   background: theme.palette.background.paper,
-  boxShadow: 'none',
+  boxShadow: elevated
+    ? '0 1px 16px 0 ' + alpha(theme.palette.text.primary, 0.05)
+    : 'none',
 }))
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: '56px !important',
@@ -108,21 +113,36 @@ const Container = styled(Box)({
   flexDirection: 'column',
 })
 
+const ElevationScroll = (props: { children: React.ReactElement }) => {
+  const { children } = props
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+    target: window,
+  })
+
+  return React.cloneElement(children, {
+    elevated: trigger,
+  })
+}
+
 const PageAppBar = () => (
   <>
-    <StyledAppBar position="fixed">
-      <StyledToolbar>
-        <Link to="/profile" style={{ borderRadius: '50%' }}>
-          <IconButton color="default" aria-label="back">
-            <ArrowLeftIcon width={28} height={28} />
+    <ElevationScroll>
+      <StyledAppBar elevated={false} position="fixed">
+        <StyledToolbar>
+          <Link to="/profile" style={{ borderRadius: '50%' }}>
+            <IconButton color="default" aria-label="back">
+              <ArrowLeftIcon width={28} height={28} />
+            </IconButton>
+          </Link>
+          <Title>Профиль</Title>
+          <IconButton type="submit" color="primary" aria-label="save">
+            <SubmitIcon width={28} height={28} />
           </IconButton>
-        </Link>
-        <Title>Профиль</Title>
-        <IconButton type="submit" color="primary" aria-label="save">
-          <SubmitIcon width={28} height={28} />
-        </IconButton>
-      </StyledToolbar>
-    </StyledAppBar>
+        </StyledToolbar>
+      </StyledAppBar>
+    </ElevationScroll>
     <Offset />
   </>
 )
