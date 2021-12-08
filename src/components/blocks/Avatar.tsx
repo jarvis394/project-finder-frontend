@@ -10,41 +10,17 @@ import randomGradient from 'random-gradient'
 import mixColors from 'src/utils/mixColors'
 import { SxProps } from '@mui/system'
 
-type Size = 'default' | 'medium' | 'small'
-
-type AvatarOptions = {
-  [key in Size]: {
-    size: number
-    borderRadius: number | string
-    fontSize: number
-  }
-}
-
-const avatarOptions: AvatarOptions = {
-  default: {
-    size: 96,
-    borderRadius: '50%',
-    fontSize: 40,
-  },
-  medium: {
-    size: 40,
-    borderRadius: '50%',
-    fontSize: 20,
-  },
-  small: {
-    size: 28,
-    borderRadius: 6,
-    fontSize: 12,
-  },
-}
+type Size = 'default' | 'small'
+const AVATAR_SIZE_DEFAULT = 96
+const AVATAR_SIZE_SMALL = 28
 
 const StyledAvatar = styled('div')<{ size: Size }>(({ size }) => ({
   display: 'flex',
-  width: avatarOptions[size].size,
-  height: avatarOptions[size].size,
-  borderRadius: avatarOptions[size].borderRadius,
+  width: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  height: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  borderRadius: size === 'default' ? '50%' : 6,
   textTransform: 'uppercase',
-  fontSize: avatarOptions[size].fontSize,
+  fontSize: size === 'default' ? 40 : 12,
   fontWeight: 900,
   fontFamily: 'Google Sans',
   alignItems: 'center',
@@ -54,9 +30,9 @@ const StyledAvatar = styled('div')<{ size: Size }>(({ size }) => ({
 }))
 const StyledImageAvatar = styled(MUIAvatar)<{ size: Size }>(({ size }) => ({
   display: 'flex',
-  width: avatarOptions[size].size,
-  height: avatarOptions[size].size,
-  borderRadius: avatarOptions[size].borderRadius,
+  width: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  height: size === 'default' ? AVATAR_SIZE_DEFAULT : AVATAR_SIZE_SMALL,
+  borderRadius: size === 'default' ? '50%' : 6,
   margin: 0,
   flexShrink: 0,
 }))
