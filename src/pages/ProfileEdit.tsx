@@ -12,12 +12,13 @@ import {
   FormHelperText,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
   useScrollTrigger,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material'
 import {
   Icon20Check as SubmitIcon,
@@ -40,7 +41,16 @@ import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { LocalizationProvider, DatePicker } from '@mui/lab'
 import AdapterDayjs from '@mui/lab/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
-import PasswordTextField from 'src/components/blocks/PasswordTextField'
+import * as api from 'src/api'
+import { useDispatch } from 'react-redux'
+import { setUser } from 'src/store/actions/profile'
+import { AxiosError } from 'axios'
+import APIError from 'src/interfaces/APIError'
+import { useSnackbar } from 'notistack'
+import { ERROR_MAP } from 'src/config/errorCodes'
+import { Icon24MailOutline } from '@vkontakte/icons'
+import { Icon24SendOutline } from '@vkontakte/icons'
+import { Icon24GlobeOutline } from '@vkontakte/icons'
 
 interface FormInput {
   name: string
@@ -49,8 +59,22 @@ interface FormInput {
   gender: 'male' | 'female'
   birthDate: Dayjs
   location: string
+  contact: {
+    email: string
+    telegram: string
+    website: string
+  }
 }
 
+const EmailIcon = styled(Icon24MailOutline)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+}))
+const TelegramIcon = styled(Icon24SendOutline)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+}))
+const WebsiteIcon = styled(Icon24GlobeOutline)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+}))
 const StyledAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'elevated',
 })<{ elevated: boolean }>(({ theme, elevated }) => ({
@@ -93,6 +117,9 @@ const Paper = styled(MUIPaper)(({ theme }) => ({
   boxShadow: 'none',
   borderRadius: 12,
   width: '100%',
+  [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
+    boxShadow: '0 0 0 1px ' + alpha(theme.palette.text.primary, 0.01)
+  }
 }))
 const SubheaderText = styled(Typography)(({ theme }) => ({
   fontSize: 16,
@@ -191,12 +218,45 @@ const ProfileEdit = () => {
     name: 'birthDate',
     defaultValue: dayjs(profile?.birthDate),
   })
+  const dispatch = useDispatch()
+  const { enqueueSnackbar } = useSnackbar()
+  const [isLoading, setLoading] = React.useState<boolean>(false)
   const [skillTags, setSkillTags] = React.useState<SkillTagNames[]>(
     profile ? profile.skillTags.map((e) => e.label) : []
   )
   const [skillTagsInputValue, setSkillTagsInputValue] = React.useState('')
-  const handleFormSubmit: SubmitHandler<FormInput> = (data) => {
-    console.log(data, skillTags)
+  const handleFormSubmit: SubmitHandler<FormInput> = async (data) => {
+    const { birthDate, gender, ...newData } = data
+    const newProfileData = {
+      ...profile,
+      ...newData,
+      gender: gender === 'female',
+      birthDate: (birthDate as Dayjs).format(),
+      skillTags: skillTags.map((e) => ({ label: e })),
+    }
+
+    setLoading(true)
+    try {
+      await api.user.changeMe(newProfileData)
+
+      // If changeMe request errored, local data won't be changed
+      // because catch block will fire after errored request
+      dispatch(setUser(newProfileData))
+    } catch (_e) {
+      const e = _e as AxiosError<APIError>
+      if (e?.response?.data) {
+        e.response.data.forEach((el) =>
+          enqueueSnackbar(ERROR_MAP[el.errorCode], {
+            variant: 'error',
+          })
+        )
+      } else if (e instanceof Error) {
+        enqueueSnackbar(e.message, {
+          variant: 'error',
+        })
+      }
+    }
+    setLoading(false)
   }
   const handleDateChange = (newValue: Dayjs) => {
     setValue('birthDate', newValue)
@@ -227,6 +287,17 @@ const ProfileEdit = () => {
 
   return (
     <Root onSubmit={handleSubmit(handleFormSubmit)}>
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          flexDirection: 'column',
+          gap: (theme) => theme.spacing(2),
+        }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <PageAppBar />
       {profileState === FetchingState.Fetching && <SpinnerBox />}
       {profileState === FetchingState.Fetched && (
@@ -304,12 +375,40 @@ const ProfileEdit = () => {
             />
           </Paper>
           <Paper>
+            <SubheaderText>Контакты</SubheaderText>
+            <Stack spacing={2} sx={{ mt: 1.5 }}>
+              <Stack spacing={1.5} direction="row" alignItems="center">
+                <EmailIcon />
+                <TextField
+                  {...register('contact.email', { required: true })}
+                  placeholder="Электропочта"
+                  defaultValue={profile.contact.email}
+                />
+              </Stack>
+              <Stack spacing={1.5} direction="row" alignItems="center">
+                <TelegramIcon />
+                <TextField
+                  {...register('contact.telegram', { required: true })}
+                  placeholder="Telegram"
+                  defaultValue={profile.contact.telegram}
+                />
+              </Stack>
+              <Stack spacing={1.5} direction="row" alignItems="center">
+                <WebsiteIcon />
+                <TextField
+                  {...register('contact.website')}
+                  placeholder="Сайт"
+                  defaultValue={profile.contact.website}
+                />
+              </Stack>
+            </Stack>
+          </Paper>
+          <Paper>
             <SubheaderText>Информация</SubheaderText>
-            <Stack spacing={2}>
+            <Stack spacing={2} sx={{ mt: 1.5 }}>
               <FormControl>
                 <TextField
                   {...register('information')}
-                  sx={{ maxWidth: 'none', mt: 1.5 }}
                   minRows={4}
                   inputProps={{
                     maxLength: MAX_INFORMATION_LENGTH,

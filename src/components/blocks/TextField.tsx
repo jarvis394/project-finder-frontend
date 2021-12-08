@@ -15,7 +15,7 @@ const StyledTextField = styled(MUITextField)(({ theme }) => ({
     borderColor: alpha(theme.palette.text.primary, 0.05),
   },
   '& .MuiOutlinedInput-root.MuiInputBase-root': {
-    borderRadius: '12px'
+    borderRadius: '12px',
   },
   '& .MuiInputBase-root:hover:not(.Mui-error) > .MuiOutlinedInput-notchedOutline':
     {
@@ -37,13 +37,7 @@ const StyledTextField = styled(MUITextField)(({ theme }) => ({
 
 const TextField: React.FC<TextFieldProps> = React.forwardRef(
   ({ ...props }, ref) => {
-    return (
-      <StyledTextField
-        fullWidth
-        inputRef={ref}
-        {...props}
-      />
-    )
+    return <StyledTextField fullWidth inputRef={ref} {...props} />
   }
 )
 
