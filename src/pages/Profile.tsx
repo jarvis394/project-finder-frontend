@@ -11,6 +11,7 @@ import {
   ListItemAvatar,
   ListItemText,
   alpha,
+  Divider,
 } from '@mui/material'
 import {
   CARD_MAX_WIDTH,
@@ -34,6 +35,7 @@ const Root = styled('div')({
   alignItems: 'center',
   width: '100%',
   height: 'calc(100vh - 56px)',
+  overflow: 'auto',
 })
 
 const Container = styled(Box)({
@@ -43,12 +45,17 @@ const Container = styled(Box)({
   flexDirection: 'column',
   position: 'relative',
   height: '100%',
+  flexFlow: 'column',
 })
 
-const CoverContainer = styled(Box)({
+const CoverContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: CARD_MAX_WIDTH,
-})
+  [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
+    boxShadow: '0 0 0 1px ' + alpha(theme.palette.text.primary, 0.01),
+  },
+  borderRadius: 12,
+}))
 
 const Paper = styled(MUIPaper)(({ theme }) => ({
   display: 'flex',
@@ -62,11 +69,17 @@ const Paper = styled(MUIPaper)(({ theme }) => ({
   },
 }))
 
-const PaperWithCover = styled(Paper)({
+const PaperWithCover = styled(MUIPaper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(2),
+  boxShadow: 'none',
+  borderRadius: 12,
+  width: '100%',
   borderTopLeftRadius: 0,
   borderTopRightRadius: 0,
   paddingTop: 0,
-})
+}))
 
 const HeaderText = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(1.5),
@@ -90,14 +103,25 @@ const Description = styled(Typography)(({ theme }) => ({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
   WebkitLineClamp: 4,
+  whiteSpace: 'break-spaces',
+  wordBreak: 'break-all',
   overflow: 'hidden',
 }))
 
 const CoverBox = styled(Box)(({ theme }) => ({
   width: '100%',
+  overflow: 'hidden',
+  display: 'flex',
   aspectRatio: `${CARD_MAX_WIDTH}/${COVER_MAX_HEIGHT}`,
-  backgroundColor: 'red',
+  [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
+    borderRadius: `0 0 ${theme.spacing(1.5)} ${theme.spacing(1.5)}`,
+  },
 }))
+
+const CoverImage = styled('img')({
+  height: 'auto',
+  width: '100%',
+})
 
 const StyledLink = styled(Link)({
   textDecoration: 'none',
@@ -111,6 +135,14 @@ const StyledLink = styled(Link)({
 const CustomListItemText = styled(ListItemText)({
   fontFamily: 'Roboto',
   fontWeight: 500,
+})
+
+const CustomDivider = styled(Divider)({
+  borderColor: alpha('#000000', 0.05),
+})
+
+const CutomChevronRight = styled(Icon24ChevronRight)({
+  color: alpha('#000000', 0.17),
 })
 
 const SpinnerBox = () => (
@@ -150,7 +182,9 @@ const Profile = () => {
               sx={{
                 background: randomGradient(profile.username),
               }}
-            />
+            >
+              {profile.coverUrl && <CoverImage src={profile.coverUrl} />}
+            </CoverBox>
             <PaperWithCover>
               <Avatar
                 src={profile.avatarUrl}
@@ -172,10 +206,10 @@ const Profile = () => {
                   fullWidth
                   type="submit"
                   sx={{
-                    maxWidth: BUTTON_MAX_WIDTH,
+                    maxWidth: CARD_MAX_WIDTH,
                   }}
                   color="primary"
-                  variant="contained"
+                  variant="alpha"
                 >
                   Редактировать информацию
                 </Button>
@@ -185,59 +219,45 @@ const Profile = () => {
           <Paper
             sx={{
               mt: (theme) => theme.spacing(2),
-              overflow: 'auto',
-              '::-webkit-scrollbar': {
-                width: 0,
-              },
+              px: 0,
             }}
           >
             <SubheaderText
               sx={{
-                pb: (theme) => theme.spacing(1),
+                px: (theme) => theme.spacing(2),
               }}
             >
               Созданные проекты
             </SubheaderText>
-            <List
-              sx={{
-                pt: 0,
-                overflow: 'auto',
-                '::-webkit-scrollbar': {
-                  width: 0,
-                },
-              }}
-            >
-              {Array(20)
-                .fill(0)
-                .map((i, index) => (
-                  <ListItem
-                    sx={{
-                      pl: 0,
-                      py: (theme) => theme.spacing(2),
-                    }}
-                    key={index}
-                    divider={true}
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="go-to-project">
-                        <Icon24ChevronRight />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar size={'medium'}></Avatar>
-                    </ListItemAvatar>
-                    <CustomListItemText
-                      primaryTypographyProps={{
-                        fontWeight: 500,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+            <List>
+              {[...profile.projects, ...profile.projects].map(
+                (project, projectIndex) => (
+                  <Box key={`${project.slug}-  ${projectIndex}`}>
+                    <ListItem
+                      sx={{
+                        py: (theme) => theme.spacing(2),
                       }}
+                      button
+                      secondaryAction={<CutomChevronRight />}
                     >
-                      Project Finder
-                    </CustomListItemText>
-                  </ListItem>
-                ))}
+                      <ListItemAvatar>
+                        <Avatar size={'medium'}></Avatar>
+                      </ListItemAvatar>
+                      <CustomListItemText
+                        primaryTypographyProps={{
+                          fontWeight: 500,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {project.title}
+                      </CustomListItemText>
+                    </ListItem>
+                    <CustomDivider />
+                  </Box>
+                )
+              )}
             </List>
           </Paper>
         </Container>

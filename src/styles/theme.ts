@@ -1,4 +1,10 @@
-import { createTheme, ThemeOptions } from '@mui/material'
+import { alpha, createTheme, ThemeOptions } from '@mui/material'
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    alpha: true
+  }
+}
 
 const theme: ThemeOptions = {
   shape: { borderRadius: 8 },
@@ -30,13 +36,30 @@ const theme: ThemeOptions = {
           fontFamily: 'Google Sans',
           fontWeight: 500,
           fontSize: 16,
-          letterSpacing: 'normal'
+          letterSpacing: 'normal',
         },
         fullWidth: {
           borderRadius: 12,
-          minHeight: 48
+          minHeight: 48,
         },
       },
+      variants: [
+        {
+          props: { variant: 'alpha', color: 'primary' },
+          style: {
+            textTransform: 'none',
+            fontFamily: 'Google Sans',
+            fontWeight: 500,
+            fontSize: 16,
+            letterSpacing: 'normal',
+            color: '#FF1744',
+            backgroundColor: alpha('#FF1744', 0.07),
+            ':hover': {
+              backgroundColor: alpha('#FF1744', 0.17),
+            },
+          },
+        },
+      ],
     },
   },
 }
