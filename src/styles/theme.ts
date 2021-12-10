@@ -2,7 +2,7 @@ import { alpha, createTheme, ThemeOptions } from '@mui/material'
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
-    alpha: true
+    transparent: true
   }
 }
 
@@ -45,7 +45,7 @@ const theme: ThemeOptions = {
       },
       variants: [
         {
-          props: { variant: 'alpha', color: 'primary' },
+          props: { variant: 'transparent', color: 'primary' },
           style: {
             textTransform: 'none',
             fontFamily: 'Google Sans',

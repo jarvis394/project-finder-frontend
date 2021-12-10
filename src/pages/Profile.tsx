@@ -209,7 +209,7 @@ const Profile = () => {
                     maxWidth: CARD_MAX_WIDTH,
                   }}
                   color="primary"
-                  variant="alpha"
+                  variant="transparent"
                 >
                   Редактировать информацию
                 </Button>
