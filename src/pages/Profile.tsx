@@ -7,7 +7,6 @@ import {
   Paper as MUIPaper,
   List,
   ListItem,
-  IconButton,
   ListItemAvatar,
   ListItemText,
   alpha,
@@ -16,8 +15,8 @@ import {
 import {
   CARD_MAX_WIDTH,
   COVER_MAX_HEIGHT,
-  BUTTON_MAX_WIDTH,
   CIRCLE_WIDTH,
+  BOTTOM_BAR_HEIGHT,
 } from 'src/config/constants'
 import { useSelector } from 'src/hooks'
 import { Navigate, Link } from 'react-router-dom'
@@ -34,7 +33,6 @@ const Root = styled('div')({
   justifyContent: 'flex-start',
   alignItems: 'center',
   width: '100%',
-  height: 'calc(100vh - 56px)',
   overflow: 'auto',
 })
 
@@ -51,19 +49,21 @@ const Container = styled(Box)({
 const CoverContainer = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: CARD_MAX_WIDTH,
+  borderRadius: 12,
+  marginBottom: theme.spacing(2),
   [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
     boxShadow: '0 0 0 1px ' + alpha(theme.palette.text.primary, 0.01),
   },
-  borderRadius: 12,
 }))
 
 const Paper = styled(MUIPaper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
+  padding: theme.spacing(2, 0),
   boxShadow: 'none',
   borderRadius: 12,
   width: '100%',
+  marginBottom: theme.spacing(2),
   [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
     boxShadow: '0 0 0 1px ' + alpha(theme.palette.text.primary, 0.01),
   },
@@ -76,8 +76,6 @@ const PaperWithCover = styled(MUIPaper)(({ theme }) => ({
   boxShadow: 'none',
   borderRadius: 12,
   width: '100%',
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0,
   paddingTop: 0,
 }))
 
@@ -114,7 +112,8 @@ const CoverBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   aspectRatio: `${CARD_MAX_WIDTH}/${COVER_MAX_HEIGHT}`,
   [theme.breakpoints.up(CARD_MAX_WIDTH)]: {
-    borderRadius: `0 0 ${theme.spacing(1.5)} ${theme.spacing(1.5)}`,
+    borderRadius: 12,
+    marginTop: theme.spacing(2),
   },
 }))
 
@@ -141,7 +140,7 @@ const CustomDivider = styled(Divider)({
   borderColor: alpha('#000000', 0.05),
 })
 
-const CutomChevronRight = styled(Icon24ChevronRight)({
+const CustomChevronRight = styled(Icon24ChevronRight)({
   color: alpha('#000000', 0.17),
 })
 
@@ -216,12 +215,7 @@ const Profile = () => {
               </StyledLink>
             </PaperWithCover>
           </CoverContainer>
-          <Paper
-            sx={{
-              mt: (theme) => theme.spacing(2),
-              px: 0,
-            }}
-          >
+          <Paper>
             <SubheaderText
               sx={{
                 px: (theme) => theme.spacing(2),
@@ -229,19 +223,19 @@ const Profile = () => {
             >
               Созданные проекты
             </SubheaderText>
-            <List>
-              {[...profile.projects, ...profile.projects].map(
-                (project, projectIndex) => (
-                  <Box key={`${project.slug}-  ${projectIndex}`}>
+            {profile.projects.length !== 0 && (
+              <List>
+                {profile.projects.map((project) => (
+                  <Box key={project.slug}>
                     <ListItem
                       sx={{
                         py: (theme) => theme.spacing(2),
                       }}
                       button
-                      secondaryAction={<CutomChevronRight />}
+                      secondaryAction={<CustomChevronRight />}
                     >
                       <ListItemAvatar>
-                        <Avatar size={'medium'}></Avatar>
+                        <Avatar size={'medium'} />
                       </ListItemAvatar>
                       <CustomListItemText
                         primaryTypographyProps={{
@@ -256,9 +250,29 @@ const Profile = () => {
                     </ListItem>
                     <CustomDivider />
                   </Box>
-                )
+                ))}
+              </List>
+            )}
+            <Box sx={{ px: 2 }}>
+              {profile.projects.length === 0 && (
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    py: 4,
+                  }}
+                >
+                  <Typography>Нет проектов</Typography>
+                </Box>
               )}
-            </List>
+              <StyledLink to="/project/create">
+                <Button fullWidth variant="contained" color="secondary">
+                  Создать проект
+                </Button>
+              </StyledLink>
+            </Box>
           </Paper>
         </Container>
       )}

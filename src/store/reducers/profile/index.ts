@@ -29,7 +29,7 @@ export default produce((draft, { type, payload }) => {
       break
     case PROFILE_FETCH_FULFILLED: {
       draft.state = FetchingState.Fetched
-      draft.data = payload as UserGetSelfInfoRes
+      draft.data = { ...payload }
       break
     }
     case PROFILE_FETCH_REJECTED: {
