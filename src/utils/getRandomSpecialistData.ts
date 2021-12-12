@@ -73,16 +73,29 @@ const informations = [
     text: 'Bash энтузиаст',
     labels: ['Bash', 'Тег для Защитина'],
   },
+  {
+    text: 'Bash энтузиаст',
+    labels: ['Bash', 'Тег для Защитина'],
+  },
+  {
+    text: 'Bash энтузиаст',
+    labels: ['Bash', 'Тег для Защитина'],
+  },
+  {
+    text: 'Bash энтузиаст',
+    labels: ['Bash', 'Тег для Защитина'],
+  },
+  {
+    text: 'Bash энтузиаст',
+    labels: ['Bash', 'Тег для Защитина'],
+  },
 ]
 
 const getRandomSpecialistData = () => {
   const info = randomInArray(informations)
-  const name = info.labels.some((e) => e === 'Bash')
-    ? 'Роман'
-    : randomInArray(names)
-  const lastname = info.labels.some((e) => e === 'Bash')
-    ? 'Защитин'
-    : randomInArray(lastnames)
+  const flag = info.labels.some((e) => e === 'Bash')
+  const name = flag ? 'Роман' : randomInArray(names)
+  const lastname = flag ? 'Защитин' : randomInArray(lastnames)
   return {
     username: name + lastname,
     name,
@@ -93,7 +106,9 @@ const getRandomSpecialistData = () => {
     canRemote: true,
     location: 'Россия, Санкт-Петербург',
     gender: false,
-    coverUrl: false,
+    coverUrl: flag
+      ? 'http://4.bp.blogspot.com/-buZyWLHKjYA/VDu1feQ9mpI/AAAAAAAAByA/kXPMbUppEsk/s1600/rock-wallpaper%2B2-728984.jpg'
+      : false,
     avatarUrl: false,
   }
 }
