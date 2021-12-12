@@ -42,10 +42,10 @@ const App: React.FC = () => {
   useTitleChange()
 
   React.useEffect(() => {
-    if (route.needsAuthorization && !isLoggedIn) {
+    if (route && route.needsAuthorization && !isLoggedIn) {
       navigate('/login')
     }
-  }, [route.needsAuthorization, isLoggedIn])
+  }, [route?.needsAuthorization, isLoggedIn])
 
   return (
     <ThemeProvider theme={theme}>

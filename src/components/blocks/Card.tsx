@@ -17,18 +17,22 @@ import {
   BOTTOM_BAR_HEIGHT,
   TOP_CARD_MARGIN,
   CARD_MAX_WIDTH,
+  CHROME_ADDRESS_BAR_HEIGHT,
 } from 'src/config/constants'
 import CloseIcon from '@mui/icons-material/CloseRounded'
 import { Icon24Cancel } from '@vkontakte/icons'
 import { Icon24LikeOutline } from '@vkontakte/icons'
 import { TransitionProps } from '@mui/material/transitions'
+import isMobile from 'is-mobile'
 
 const StyledCard = styled(motion.div)(({ theme }) => ({
   position: 'absolute',
   background: theme.palette.background.paper,
   width: `calc(100vw - ${theme.spacing(2)} - ${theme.spacing(2)})`,
   margin: 'auto',
-  maxHeight: `calc(100vh - ${BOTTOM_BAR_HEIGHT}px - ${TOP_CARD_MARGIN * 2}px)`,
+  maxHeight: `calc(100vh - ${BOTTOM_BAR_HEIGHT}px - ${
+    TOP_CARD_MARGIN * 2
+  }px - ${isMobile() ? CHROME_ADDRESS_BAR_HEIGHT : 0}px)`,
   aspectRatio: '1/1.75',
   display: 'flex',
   boxShadow: '0 0 24px 0 ' + alpha(theme.palette.text.primary, 0.15),
@@ -44,6 +48,7 @@ const Content = styled('div')(({ theme }) => ({
   borderRadius: 12,
   height: '100%',
   position: 'relative',
+  width: '100%',
 }))
 const DialogAppBar = styled(AppBar)(({ theme }) => ({
   minHeight: '56px !important',

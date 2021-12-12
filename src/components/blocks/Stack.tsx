@@ -14,7 +14,7 @@ import {
   CIRCLE_ANIMATION_SCALE,
 } from 'src/config/constants'
 import Circle from './Circle'
-import { Button, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 
 interface StackProps {
   onTransformChange: (x: MotionValue<number>) => void
@@ -38,7 +38,6 @@ const variants: Variants = {
     y: 0,
     transformOrigin: 'bottom',
     transition: {
-      bounce: false,
       ease: 'easeOut',
       delay: 0,
     },
@@ -46,9 +45,6 @@ const variants: Variants = {
   exit: (direction: boolean) => ({
     x: direction ? 700 : -700,
     opacity: 0,
-    transition: {
-      bounce: false,
-    },
   }),
 }
 
@@ -131,13 +127,13 @@ const Stack: React.FC<StackProps> = ({
       current.x.set(0)
       likeCircleControls.set({
         left: -CIRCLE_WIDTH - 16,
-        scale: 1,
-        transition: { duration: 0, bounce: false },
+        scale: 2,
+        transition: { type: 'just' },
       })
       rejectCircleControls.set({
         right: -CIRCLE_WIDTH - 16,
-        scale: 1,
-        transition: { duration: 0, bounce: false },
+        scale: 2,
+        transition: { type: 'just' },
       })
 
       // Display new card
@@ -285,22 +281,6 @@ const Stack: React.FC<StackProps> = ({
           </>
         )}
       </AnimatePresence>
-      <Button
-        style={{ position: 'absolute', zIndex: 1000, left: 4, top: 4 }}
-        onClick={voteReject}
-        color="secondary"
-        variant="contained"
-      >
-        vote reject
-      </Button>
-      <Button
-        style={{ position: 'absolute', zIndex: 1000, right: 4, top: 4 }}
-        onClick={voteLike}
-        color="primary"
-        variant="contained"
-      >
-        vote like
-      </Button>
     </>
   )
 }

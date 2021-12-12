@@ -15,6 +15,7 @@ import {
 import Stack from 'src/components/blocks/Stack'
 import isMobile from 'is-mobile'
 import SpecialistCard from 'src/components/blocks/SpecialistCard'
+import getRandomSpecialistData from 'src/utils/getRandomSpecialistData'
 
 const Wrapper = styled(motion.div)`
   position: relative;
@@ -29,27 +30,10 @@ const Wrapper = styled(motion.div)`
   overflow: hidden;
 `
 
-const getRandomProjectData = () => ({
-  username: 'jarvis394',
-  name: 'Василий',
-  lastname: 'Пупкин',
-  contact: '@tarnatovski',
-  information:
-    'Разработчик на Excel. Пишу игровые движки в свободное время на LibreOffice.',
-  skillTags: [{ label: 'Excel' }, { label: 'LibreOffice' }],
-  canRemote: true,
-  location: 'Россия, Санкт-Петербург',
-  gender: false,
-  coverUrl: false,
-  avatarUrl: false,
-})
-
 const Specialists = () => {
-  const [items, setItems] = useState<unknown[]>([
-    getRandomProjectData(),
-    getRandomProjectData(),
-    getRandomProjectData(),
-  ])
+  const [items, setItems] = useState<unknown[]>(
+    new Array(10).fill(0).map(() => getRandomSpecialistData())
+  )
   const x = useMotionValue(0)
   const xConstraints = [-MIN_SWIPE_WIDTH, 0, MIN_SWIPE_WIDTH]
   const background = useTransform(x, xConstraints, [
@@ -71,8 +55,8 @@ const Specialists = () => {
     return new Promise<unknown[]>((resolve) => {
       setTimeout(
         () =>
-          resolve(new Array(3).fill(0).map((_, i) => getRandomProjectData())),
-        1000
+          resolve(new Array(10).fill(0).map(() => getRandomSpecialistData())),
+        500
       )
     })
   }
