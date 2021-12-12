@@ -284,15 +284,17 @@ const Profile = () => {
               </StyledLink>
             </Box>
           </Paper>
-          <Button
-            variant="transparent"
-            fullWidth
-            color="primary"
-            sx={{ background: 'transparent' }}
-            onClick={handleLogoutClick}
-          >
-            Выйти из профиля
-          </Button>
+          <Box sx={{ px: 2, mb: 2 }}>
+            <Button
+              variant="transparent"
+              fullWidth
+              color="primary"
+              sx={{ background: 'transparent' }}
+              onClick={handleLogoutClick}
+            >
+              Выйти из профиля
+            </Button>
+          </Box>
         </Container>
       )}
     </Root>
