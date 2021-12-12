@@ -19,13 +19,15 @@ import {
   BOTTOM_BAR_HEIGHT,
 } from 'src/config/constants'
 import { useSelector } from 'src/hooks'
-import { Navigate, Link } from 'react-router-dom'
+import { Navigate, Link, useNavigate } from 'react-router-dom'
 import FetchingState from 'src/interfaces/FetchingState'
 import Spinner from 'src/components/blocks/Spinner'
 import Avatar from 'src/components/blocks/Avatar'
 import randomGradient from 'random-gradient'
 
 import { Icon24ChevronRight } from '@vkontakte/icons'
+import { useDispatch } from 'react-redux'
+import { logout } from 'src/store/actions/auth'
 
 const Root = styled('div')({
   display: 'flex',
@@ -129,6 +131,7 @@ const StyledLink = styled(Link)({
   alignItems: 'center',
   width: '100%',
   justifyContent: 'center',
+  WebkitTapHighlightColor: 'transparent',
 })
 
 const CustomListItemText = styled(ListItemText)({
@@ -142,6 +145,12 @@ const CustomDivider = styled(Divider)({
 
 const CustomChevronRight = styled(Icon24ChevronRight)({
   color: alpha('#000000', 0.17),
+})
+
+const Centered = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 })
 
 const SpinnerBox = () => (
@@ -165,10 +174,11 @@ const SpinnerBox = () => (
 const Profile = () => {
   const profile = useSelector((store) => store.profile.data)
   const profileState = useSelector((store) => store.profile.state)
-  const isLoggedIn = useSelector((store) => store.auth.isLoggedIn)
-
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleLogoutClick = () => {
+    dispatch(logout())
+    navigate('/')
   }
 
   return (
@@ -274,6 +284,15 @@ const Profile = () => {
               </StyledLink>
             </Box>
           </Paper>
+          <Button
+            variant="transparent"
+            fullWidth
+            color="primary"
+            sx={{ background: 'transparent' }}
+            onClick={handleLogoutClick}
+          >
+            Выйти из профиля
+          </Button>
         </Container>
       )}
     </Root>

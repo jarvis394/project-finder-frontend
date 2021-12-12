@@ -92,6 +92,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   width: '100%',
   justifyContent: 'center',
+  WebkitTapHighlightColor: 'transparent',
 }))
 
 const AuthData: React.FC<StepProps> = ({ setValues }) => {

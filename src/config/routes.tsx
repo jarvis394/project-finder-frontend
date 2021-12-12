@@ -15,6 +15,7 @@ export interface Route {
   element: React.ReactElement
   title?: string
   shouldHideInterface?: boolean
+  needsAuthorization?: boolean
   alias: string
 }
 
@@ -24,6 +25,7 @@ export const routes: Route[] = [
     element: <Projects />,
     title: 'Проекты',
     shouldHideInterface: false,
+    needsAuthorization: true,
     alias: 'projects',
   },
   {
@@ -31,6 +33,7 @@ export const routes: Route[] = [
     element: <Specialists />,
     title: 'Специалисты',
     shouldHideInterface: false,
+    needsAuthorization: true,
     alias: 'specialists',
   },
   {
@@ -38,6 +41,7 @@ export const routes: Route[] = [
     element: <Profile />,
     title: 'Профиль',
     shouldHideInterface: false,
+    needsAuthorization: true,
     alias: 'profile',
   },
   {
@@ -45,6 +49,7 @@ export const routes: Route[] = [
     element: <Notifications />,
     title: 'Уведомления',
     shouldHideInterface: false,
+    needsAuthorization: true,
     alias: 'notifications',
   },
   {
@@ -66,6 +71,7 @@ export const routes: Route[] = [
     element: <ProfileEdit />,
     title: 'Редактирование профиля',
     shouldHideInterface: true,
+    needsAuthorization: true,
     alias: 'profileEdit',
   },
   {

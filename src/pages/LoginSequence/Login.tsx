@@ -45,6 +45,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   width: '100%',
   justifyContent: 'center',
+  WebkitTapHighlightColor: 'transparent',
 }))
 
 const Login: React.FC<StepProps> = ({ setValues }) => {

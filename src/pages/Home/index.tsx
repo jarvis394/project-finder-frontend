@@ -132,7 +132,8 @@ const TextButton = styled(Typography, {
   fontFamily: 'Roboto',
   fontWeight: 500,
   fontSize: 15,
-  position: 'relative',
+  zIndex: 100,
+  position: 'absolute',
   color: active
     ? theme.palette.getContrastText(theme.palette.primary.main)
     : theme.palette.text.primary,
@@ -141,6 +142,26 @@ const TextButton = styled(Typography, {
   },
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
+  '&#specialist': {
+    top: theme.spacing(1),
+    transform: 'translateX(-50%)',
+    left: '50%',
+    [theme.breakpoints.up('md')]: {
+      top: theme.spacing(2),
+      transform: 'translateX(-100%)',
+      left: `calc(50% - ${theme.spacing(4)})`,
+    },
+  },
+  '&#headhunter': {
+    bottom: theme.spacing(1),
+    transform: 'translateX(-50%)',
+    left: '50%',
+    [theme.breakpoints.up('md')]: {
+      top: theme.spacing(2),
+      bottom: 'initial',
+      transform: `translateX(${theme.spacing(4)})`,
+    },
+  },
   '&:hover': {
     color: active
       ? theme.palette.getContrastText(theme.palette.primary.main)
@@ -173,7 +194,6 @@ const TextButton = styled(Typography, {
 }))
 
 const HeroButton = styled(Button)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
   color: theme.palette.text.primary,
   background: theme.palette.getContrastText(theme.palette.primary.main),
   transitionDuration: `${theme.transitions.duration.complex}ms`,
@@ -190,16 +210,20 @@ const Home = () => {
   return (
     <Root>
       <ColoredBox moved={isMoved} />
-      <TextButtonsWrapper>
-        <TextButtonsContainer>
-          <TextButton active={!isMoved} onClick={() => setMoved(false)}>
-            Я специалист
-          </TextButton>
-          <TextButton active={isMoved} onClick={() => setMoved(true)}>
-            Я работодатель
-          </TextButton>
-        </TextButtonsContainer>
-      </TextButtonsWrapper>
+      <TextButton
+        id="specialist"
+        active={!isMoved}
+        onClick={() => setMoved(false)}
+      >
+        Я специалист
+      </TextButton>
+      <TextButton
+        id="headhunter"
+        active={isMoved}
+        onClick={() => setMoved(true)}
+      >
+        Я работодатель
+      </TextButton>
       <Container active={!isMoved}>
         <HeroTitle>
           найди
@@ -225,7 +249,14 @@ const Home = () => {
             Перейти к поиску
           </HeroButton>
         </StyledLink>
-        <StyledLink to="/login" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <StyledLink
+          to="/login"
+          sx={{
+            color: 'rgba(255, 255, 255, 0.7)',
+            width: 'fit-content',
+            mt: 2,
+          }}
+        >
           Уже зарегистрированы?{' '}
           <span style={{ textDecoration: 'underline' }}>Войти</span>
         </StyledLink>
@@ -260,7 +291,14 @@ const Home = () => {
             Перейти к поиску
           </HeroButton>
         </StyledLink>
-        <StyledLink to="/login" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <StyledLink
+          to="/login"
+          sx={{
+            mt: 2,
+            color: 'rgba(255, 255, 255, 0.7)',
+            width: 'fit-content',
+          }}
+        >
           Уже зарегистрированы?{' '}
           <span style={{ textDecoration: 'underline' }}>Войти</span>
         </StyledLink>

@@ -45,6 +45,7 @@ export default produce((draft, { type, payload }) => {
       draft.state = FetchingState.Fetched
       draft.accessToken = accessToken
       draft.refreshToken = refreshToken
+      draft.isLoggedIn = true
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
       localStorage.setItem(TOKEN_EXPIRE_KEY, expires.toString())
@@ -53,6 +54,7 @@ export default produce((draft, { type, payload }) => {
     case AUTH_LOGIN_FETCH_REJECTED: {
       const { error } = payload as AuthErrorResponse
       draft.state = FetchingState.Error
+      draft.isLoggedIn = false
       draft.fetchError = error.response.data
       break
     }
@@ -66,6 +68,7 @@ export default produce((draft, { type, payload }) => {
       draft.accessToken = accessToken
       draft.refreshToken = refreshToken
       draft.tokenExpire = expires
+      draft.isLoggedIn = true
       localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
       localStorage.setItem(TOKEN_EXPIRE_KEY, expires.toString())
@@ -75,6 +78,7 @@ export default produce((draft, { type, payload }) => {
       draft.accessToken = null
       draft.refreshToken = null
       draft.tokenExpire = null
+      draft.isLoggedIn = false
       localStorage.removeItem(ACCESS_TOKEN_KEY)
       localStorage.removeItem(REFRESH_TOKEN_KEY)
       localStorage.removeItem(TOKEN_EXPIRE_KEY)

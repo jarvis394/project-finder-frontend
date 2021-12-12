@@ -9,9 +9,9 @@ import {
 } from 'src/config/constants'
 import theme from 'src/styles/theme'
 import BottomNavigation from 'src/components/blocks/BottomNavigation'
-import { useRoutes } from 'react-router-dom'
+import { useNavigate, useRoutes } from 'react-router-dom'
 import { routes } from 'src/config/routes'
-import { useRoute } from 'src/hooks'
+import { useRoute, useSelector } from 'src/hooks'
 import { SnackbarProvider } from 'notistack'
 import useFetchMe from 'src/hooks/useFetchMe'
 import useTitleChange from 'src/hooks/useTitleChange'
@@ -35,9 +35,17 @@ const Root = styled('div', {
 const App: React.FC = () => {
   const Component = useRoutes(routes)
   const route = useRoute()
+  const navigate = useNavigate()
+  const isLoggedIn = useSelector((store) => store.auth.isLoggedIn)
 
   useFetchMe()
   useTitleChange()
+
+  React.useEffect(() => {
+    if (route.needsAuthorization && !isLoggedIn) {
+      navigate('/login')
+    }
+  }, [route.needsAuthorization, isLoggedIn])
 
   return (
     <ThemeProvider theme={theme}>
