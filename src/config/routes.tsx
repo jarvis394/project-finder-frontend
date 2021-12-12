@@ -8,6 +8,7 @@ import Specialists from 'src/pages/Specialists'
 import Offline from 'src/pages/Offline'
 import RegisterSequence from 'src/pages/RegisterSequence/index'
 import ProfileEdit from 'src/pages/ProfileEdit'
+import Home from 'src/pages/Home/index'
 
 export interface Route {
   path: string
@@ -75,8 +76,8 @@ export const routes: Route[] = [
   },
   {
     path: '/',
-    element: <Navigate replace to="/projects" />,
-    shouldHideInterface: false,
+    element: <Home />,
+    shouldHideInterface: true,
     alias: 'root',
   },
 ]
