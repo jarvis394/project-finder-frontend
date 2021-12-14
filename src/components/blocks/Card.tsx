@@ -12,7 +12,9 @@ import {
   Grid,
   ButtonBase,
   Slide,
+  Theme,
 } from '@mui/material'
+import { SxProps } from '@mui/system'
 import {
   BOTTOM_BAR_HEIGHT,
   TOP_CARD_MARGIN,
@@ -123,6 +125,7 @@ interface CardProps {
   setClosed: () => unknown
   voteLike: () => unknown
   voteReject: () => unknown
+  sx?: SxProps<Theme>
 }
 
 const Card: React.FC<CardProps & MotionProps> = ({

@@ -1,12 +1,16 @@
 import { Grid, styled, Typography } from '@mui/material'
 import { Icon20PlaceOutline } from '@vkontakte/icons'
 import { DragHandlers, MotionProps } from 'framer-motion'
+import isMobile from 'is-mobile'
 import { User } from 'project-finder-backend-types'
 import React, { useCallback, useMemo, useState } from 'react'
 import {
   COVER_MAX_HEIGHT,
   CARD_MAX_WIDTH,
   MAX_SKILL_TAGS_DISPLAYED,
+  TOP_CARD_MARGIN,
+  BOTTOM_BAR_HEIGHT,
+  CHROME_ADDRESS_BAR_HEIGHT,
 } from 'src/config/constants'
 import Avatar from './Avatar'
 import Card from './Card'
@@ -133,6 +137,12 @@ const SpecialistCard: React.FC<SpecialistCardProps & MotionProps> = ({
       setClosed={closeCard}
       onDragStart={onDragStart}
       onDragTransitionEnd={onDragTransitionEnd}
+      sx={{
+        marginTop: `${TOP_CARD_MARGIN}px`,
+        maxHeight: `calc(100vh - ${BOTTOM_BAR_HEIGHT}px - ${
+          TOP_CARD_MARGIN * 3
+        }px - ${isMobile() ? CHROME_ADDRESS_BAR_HEIGHT : 0}px)`,
+      }}
       {...props}
     >
       {({ isExpanded }) => (
