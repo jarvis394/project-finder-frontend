@@ -1,19 +1,6 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { motion, MotionProps } from 'framer-motion'
-import {
-  alpha,
-  styled,
-  Dialog,
-  IconButton,
-  AppBar,
-  Toolbar,
-  Typography,
-  DialogActions,
-  Grid,
-  ButtonBase,
-  Slide,
-  Theme,
-} from '@mui/material'
+import { alpha, styled, Theme } from '@mui/material'
 import { SxProps } from '@mui/system'
 import {
   BOTTOM_BAR_HEIGHT,
@@ -21,11 +8,8 @@ import {
   CARD_MAX_WIDTH,
   CHROME_ADDRESS_BAR_HEIGHT,
 } from 'src/config/constants'
-import CloseIcon from '@mui/icons-material/CloseRounded'
-import { Icon24Cancel } from '@vkontakte/icons'
-import { Icon24LikeOutline } from '@vkontakte/icons'
-import { TransitionProps } from '@mui/material/transitions'
 import isMobile from 'is-mobile'
+import CardDialog from './CardDialog'
 
 const StyledCard = styled(motion.div)(({ theme }) => ({
   position: 'absolute',
@@ -52,71 +36,6 @@ const Content = styled('div')(({ theme }) => ({
   position: 'relative',
   width: '100%',
 }))
-const DialogAppBar = styled(AppBar)(({ theme }) => ({
-  minHeight: '56px !important',
-  height: '56px !important',
-  color: theme.palette.text.primary,
-  background: theme.palette.background.paper,
-  boxShadow: 'none',
-  borderTopLeftRadius: 12,
-  borderTopRightRadius: 12,
-}))
-const DialogToolbar = styled(Toolbar)({
-  minHeight: '56px !important',
-  height: '56px !important',
-})
-const CardDialogPaper = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  background: theme.palette.background.paper,
-  width: '100%',
-  height: '100%',
-  borderRadius: '12px !important',
-}))
-const CardDialogActions = styled(DialogActions)(({ theme }) => ({
-  padding: 0,
-  display: 'flex',
-  alignItems: 'center',
-  background: theme.palette.background.paper,
-  width: '100%',
-  position: 'fixed',
-  bottom: 0,
-  maxWidth: CARD_MAX_WIDTH,
-}))
-const CardDialogActionButtonLabel = styled(Typography)(({ theme }) => ({
-  marginLeft: theme.spacing(1.5),
-  fontFamily: 'Google Sans',
-  fontWeight: 500,
-  fontSize: 16,
-  color: theme.palette.text.primary,
-}))
-const Title = styled(Typography)({
-  display: 'flex',
-  alignItems: 'center',
-  fontFamily: 'Google Sans',
-  fontSize: 20,
-  fontWeight: 500,
-  flexGrow: 1,
-  height: '100%',
-})
-const Offset = styled('div')({ height: 56, display: 'flex', flexShrink: 0 })
-const CenteredButtonBase = styled(ButtonBase)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  height: BOTTOM_BAR_HEIGHT,
-  borderRadius: 12,
-})
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
 
 interface CardProps {
   open: boolean
@@ -137,65 +56,17 @@ const Card: React.FC<CardProps & MotionProps> = ({
   voteReject,
   ...props
 }) => {
-  const dialogRef = useRef()
-  const handleLikeClick = () => {
-    setClosed()
-    voteLike()
-  }
-  const handleRejectClick = () => {
-    setClosed()
-    voteReject()
-  }
-
   return (
     <>
-      <Dialog
-        PaperComponent={CardDialogPaper}
+      <CardDialog
         open={open}
-        fullScreen
-        PaperProps={{ ref: dialogRef }}
-        TransitionComponent={Transition}
+        setClosed={setClosed}
+        voteLike={voteLike}
+        voteReject={voteReject}
+        title={title}
       >
-        <DialogAppBar position="fixed">
-          <DialogToolbar>
-            <Title>{title}</Title>
-            <IconButton color="inherit" onClick={setClosed} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-          </DialogToolbar>
-        </DialogAppBar>
-        <Offset />
-        <Content>{children({ isExpanded: true })}</Content>
-        <Offset />
-        <CardDialogActions>
-          <Grid container>
-            <Grid
-              component={CenteredButtonBase}
-              sx={{ color: (theme) => theme.palette.secondary.main }}
-              item
-              xs={6}
-              onClick={handleRejectClick}
-            >
-              <Icon24Cancel />
-              <CardDialogActionButtonLabel>
-                Отклонить
-              </CardDialogActionButtonLabel>
-            </Grid>
-            <Grid
-              component={CenteredButtonBase}
-              sx={{ color: (theme) => theme.palette.primary.main }}
-              item
-              xs={6}
-              onClick={handleLikeClick}
-            >
-              <Icon24LikeOutline />
-              <CardDialogActionButtonLabel>
-                Нравится
-              </CardDialogActionButtonLabel>
-            </Grid>
-          </Grid>
-        </CardDialogActions>
-      </Dialog>
+        {children}
+      </CardDialog>
       <StyledCard
         dragConstraints={{ left: 0, right: 0 }}
         drag="x"

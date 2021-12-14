@@ -69,30 +69,15 @@ const informations = [
     text: 'Fullstack Vue developer, опыт работы с Python',
     labels: ['Vue', 'Python'],
   },
-  {
-    text: 'Bash энтузиаст',
-    labels: ['Bash', 'Тег для Защитина'],
-  },
-  {
-    text: 'Bash энтузиаст',
-    labels: ['Bash', 'Тег для Защитина'],
-  },
-  {
-    text: 'Bash энтузиаст',
-    labels: ['Bash', 'Тег для Защитина'],
-  },
-  {
-    text: 'Bash энтузиаст',
-    labels: ['Bash', 'Тег для Защитина'],
-  },
-  {
-    text: 'Bash энтузиаст',
-    labels: ['Bash', 'Тег для Защитина'],
-  },
 ]
 
-const getRandomSpecialistData = () => {
-  const info = randomInArray(informations)
+const zashitinInformation = {
+  text: 'Bash энтузиаст',
+  labels: ['Bash', 'Тег для Защитина'],
+}
+
+const getRandomSpecialistData = ({ zashitin } = { zashitin: false }) => {
+  const info = zashitin ? zashitinInformation : randomInArray(informations)
   const flag = info.labels.some((e) => e === 'Bash')
   const name = flag ? 'Роман' : randomInArray(names)
   const lastname = flag ? 'Защитин' : randomInArray(lastnames)

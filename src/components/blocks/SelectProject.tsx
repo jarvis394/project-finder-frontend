@@ -82,8 +82,10 @@ const CustomListItemText = styled(ListItemText)({
 })
 
 type SelectProjectProps = {
-  selectProject: () => void
+  selectProject: (project: string) => void
 }
+
+const PROJECTS = ['Project Finder', 'ITMO.STUDENTS']
 
 const SelectProject: React.FC<SelectProjectProps> = ({ selectProject }) => {
   return (
@@ -99,35 +101,33 @@ const SelectProject: React.FC<SelectProjectProps> = ({ selectProject }) => {
             pb: (theme) => theme.spacing(2),
           }}
         >
-          {Array(3)
-            .fill(0)
-            .map((project, projectIndex) => (
-              <Box key={projectIndex}>
-                <ListItem
-                  sx={{
-                    py: (theme) => theme.spacing(2),
+          {PROJECTS.map((project, projectIndex) => (
+            <Box key={projectIndex}>
+              <ListItem
+                sx={{
+                  py: (theme) => theme.spacing(2),
+                }}
+                button
+                secondaryAction={<CustomChevronRight />}
+                onClick={() => selectProject(project)}
+              >
+                <ListItemAvatar>
+                  <Avatar size={'medium'} uid={project} letter={project[0]} />
+                </ListItemAvatar>
+                <CustomListItemText
+                  primaryTypographyProps={{
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
-                  button
-                  secondaryAction={<CustomChevronRight />}
-                  onClick={selectProject}
                 >
-                  <ListItemAvatar>
-                    <Avatar size={'medium'} />
-                  </ListItemAvatar>
-                  <CustomListItemText
-                    primaryTypographyProps={{
-                      fontWeight: 500,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    ProjectFinder
-                  </CustomListItemText>
-                </ListItem>
-                <CustomDivider />
-              </Box>
-            ))}
+                  {project}
+                </CustomListItemText>
+              </ListItem>
+              <CustomDivider />
+            </Box>
+          ))}
         </List>
         <Box
           sx={{

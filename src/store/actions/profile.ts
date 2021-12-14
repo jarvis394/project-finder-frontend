@@ -6,7 +6,18 @@ import {
   PROFILE_SET_USER,
 } from 'src/store/reducers/profile/types'
 import { Dispatch } from 'redux'
-import { User } from 'project-finder-backend-types'
+import { Project, User } from 'project-finder-backend-types'
+
+const PROJECTS: Partial<Project>[] = [
+  {
+    title: 'Project Finder',
+    slug: 'project-finder',
+  },
+  {
+    title: 'ITMO.STUDENTS',
+    slug: 'itmo-students',
+  },
+]
 
 export const getMe = () => async (dispatch: Dispatch) => {
   dispatch({ type: PROFILE_FETCH })
@@ -16,7 +27,10 @@ export const getMe = () => async (dispatch: Dispatch) => {
 
     dispatch({
       type: PROFILE_FETCH_FULFILLED,
-      payload: data,
+      payload: {
+        ...data,
+        projects: PROJECTS,
+      },
     })
   } catch (error) {
     dispatch({

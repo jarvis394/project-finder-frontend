@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { useSelector } from 'src/hooks'
 import useQuery from 'src/hooks/useQuery'
 import Login from './Login'
 import Password from './Password'
@@ -15,10 +17,16 @@ export interface StepProps {
 const StepLoginForm: React.FC = () => {
   const query = useQuery()
   const step = query.get('step')
+  const isLoggedIn = useSelector((store) => store.auth.isLoggedIn)
+  const navigate = useNavigate()
   const [values, setValues] = useState<LoginValuesObject>({
     login: '',
     password: '',
   })
+
+  useEffect(() => {
+    if (isLoggedIn) navigate('/projects')
+  }, [isLoggedIn])
 
   return (
     <>

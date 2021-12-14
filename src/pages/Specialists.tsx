@@ -34,7 +34,7 @@ const Wrapper = styled(motion.div)`
 
 const Specialists = () => {
   const [items, setItems] = useState<unknown[]>(
-    new Array(10).fill(0).map(() => getRandomSpecialistData())
+    [...new Array(2).fill(0).map(() => getRandomSpecialistData()), getRandomSpecialistData({ zashitin: true }), ...new Array(7).fill(0).map(() => getRandomSpecialistData())]
   )
   const [selectedProject, setSelectedProject] = useState<string>('')
   const x = useMotionValue(0)
@@ -64,8 +64,8 @@ const Specialists = () => {
     })
   }
 
-  const selectProject = () => {
-    setSelectedProject('Project finder')
+  const selectProject = (project: string) => {
+    setSelectedProject(project)
   }
 
   const openSelection = () => {

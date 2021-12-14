@@ -6,14 +6,14 @@ import { Icon16DropdownOutline } from '@vkontakte/icons'
 const Topbar = styled(Button)(({ theme }) => ({
   position: 'fixed',
   top: 0,
-  minHeight: TOP_CARD_MARGIN,
+  minHeight: 32,
   borderRadius: 0,
   padding: 0,
   width: '100%',
   zIndex: 10,
 }))
 
-const TopBarocntent = styled(Box)({
+const TopBarContent = styled(Box)({
   width: '100%',
   maxWidth: CARD_MAX_WIDTH,
   display: 'flex',
@@ -21,7 +21,7 @@ const TopBarocntent = styled(Box)({
   alignItems: 'center',
 })
 
-const TobbarTitle = styled(Typography)(({ theme }) => ({
+const TopBarTitle = styled(Typography)(({ theme }) => ({
   color: '#ffffff',
   fontSize: theme.spacing(1.75),
   fontWeight: 500,
@@ -44,10 +44,10 @@ const SelectedProjectTopbar: React.FC<SelectedProjectTopbar> = ({
 }) => {
   return (
     <Topbar onClick={onClick} fullWidth variant="contained" color="secondary">
-      <TopBarocntent>
-        <TobbarTitle>Выбранный проект - {project}</TobbarTitle>
+      <TopBarContent>
+        <TopBarTitle>Выбранный проект — {project}</TopBarTitle>
         <CustomDropDownIcon />
-      </TopBarocntent>
+      </TopBarContent>
     </Topbar>
   )
 }

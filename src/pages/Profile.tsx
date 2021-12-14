@@ -235,7 +235,7 @@ const Profile = () => {
             </SubheaderText>
             {profile.projects.length !== 0 && (
               <List>
-                {profile.projects.map((project) => (
+                {profile.projects.map((project, i) => (
                   <Box key={project.slug}>
                     <ListItem
                       sx={{
@@ -245,7 +245,11 @@ const Profile = () => {
                       secondaryAction={<CustomChevronRight />}
                     >
                       <ListItemAvatar>
-                        <Avatar size={'medium'} />
+                        <Avatar
+                          size={'medium'}
+                          uid={project.title}
+                          letter={project.title[0]}
+                        />
                       </ListItemAvatar>
                       <CustomListItemText
                         primaryTypographyProps={{
@@ -258,7 +262,7 @@ const Profile = () => {
                         {project.title}
                       </CustomListItemText>
                     </ListItem>
-                    <CustomDivider />
+                    {i !== profile.projects.length - 1 && <CustomDivider />}
                   </Box>
                 ))}
               </List>

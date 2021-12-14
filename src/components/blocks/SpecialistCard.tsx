@@ -132,7 +132,7 @@ const SpecialistCard: React.FC<SpecialistCardProps & MotionProps> = ({
     <Card
       voteLike={voteLike}
       voteReject={voteReject}
-      title={'Проект'}
+      title={'Специалист'}
       open={isOpen}
       setClosed={closeCard}
       onDragStart={onDragStart}
