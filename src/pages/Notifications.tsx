@@ -9,97 +9,178 @@ import {
   ListItemText as Description,
   Collapse,
   ListItemText,
+  Typography,
+  alpha,
+  Box,
+  ListItem,
+  ListItemAvatar,
 } from '@mui/material'
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
+import { Icon24ChevronRight } from '@vkontakte/icons'
 const Notifications = () => {
-  const Nots = styled(ListSubheader)(({ theme }) => ({
-    width: '100%',
-    height: '80%',
-    color: 'black',
-    bgcolor: 'background.paper',
-    fontWeight: 500,
-    fontSize: '28px',
-    marginTop: '4px',
-    display: 'flex',
-    flexDirection: 'row',
-  }))
-  const [number, setNumber] = useState(16)
-  const Counter = styled('div')(({ theme }) => ({
-    marginLeft: '8px',
-    fontSize: '32px',
-    color: 'red',
-  }))
-  const [open, setOpen] = React.useState(false)
-  const handleClick = () => {
-    setOpen(!open)
-  }
-  const NotsList = styled(List)(({ theme }) => ({
+  const SubheaderText = styled(Typography)(({ theme }) => ({
     width: '100%',
     height: '100%',
-    bgcolor: 'background.paper',
+    fontSize: '24px',
+    fontFamily: 'Google sans',
+    fontWeight: 'bold',
+    color: 'black',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   }))
-  const Ava = styled(Avatar)(({ theme }) => ({
-    background: '#7B61FF',
-    color: '#7B61FF',
-  }))
-  const Description = styled(ListItemText)(({ theme }) => ({
-    marginLeft: '10px',
-  }))
-  const ProFind = styled('div')(({ theme }) => ({
-    marginBottom: '-2.5%',
-    fontSize: '20px',
-    fontWeight: 600,
-  }))
-  const Liked = styled('div')(({ theme }) => ({
+  const CustomListItemText1 = styled(ListItemText)({
+    marginBottom: '-6px',
+    fontFamily: 'Roboto',
     fontSize: '16px',
-    fontWeight: 500,
-    color: 'gray',
-  }))
-  const Expand = styled(ExpandLess)(({ theme }) => ({}))
+    fontWeight: 'bold',
+  })
+  const CustomListItemText2 = styled(ListItemText)({
+    fontFamily: 'Roboto',
+    fontSize: '14px',
+    fontWeight: 'medium',
+    color: alpha('#000000', 0.5),
+  })
+
+  const CustomDivider = styled(Divider)({
+    borderColor: alpha('#000000', 0.05),
+  })
+
+  const CustomChevronRight = styled(Icon24ChevronRight)({
+    color: alpha('#000000', 0.17),
+  })
+
+  const [number, setNumber] = useState(16)
   return (
-    <NotsList
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <Nots>
-          Уведомления <Counter>{number}</Counter>
-        </Nots>
+    <List sx={{ width: '100%', height: '100%' }}>
+      {
+        <SubheaderText
+          sx={{
+            alignItems: 'flex-end',
+            px: (theme) => theme.spacing(2),
+          }}
+        >
+          Уведомления
+          <div
+            style={{
+              marginLeft: '8px',
+              color: '#FF1744',
+            }}
+          >
+            {number}
+          </div>
+        </SubheaderText>
       }
-    >
-      <ListItemButton>
-        <Ava />
-        <Description>
-          <ProFind>Project Finder</ProFind>
-          <Liked>Вас лайкнул этот проект</Liked>
-        </Description>
-        {open ? <ExpandLess /> : <ExpandMore sx={{ color: 'gray' }} />}
-      </ListItemButton>
-      <Divider />
-      <ListItemButton>
-        <Ava />
-        <Description>
-          <ProFind>Project Finder</ProFind>
-          <Liked>Вы подходите для проекта</Liked>
-        </Description>
-        {open ? <ExpandLess /> : <ExpandMore sx={{ color: 'gray' }} />}
-      </ListItemButton>
-      <Divider />
-      <ListItemButton>
-        <Ava />
-        <Description>
-          <ProFind>Project Finder</ProFind>
-          <Liked>Вы подходите для проекта</Liked>
-        </Description>
-        {open ? <ExpandLess /> : <ExpandMore sx={{ color: 'gray' }} />}
-      </ListItemButton>
-      {/* <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
-        </List>
-      </Collapse> */}
-    </NotsList>
+      <Box>
+        <ListItem
+          sx={{
+            width: '100%',
+            height: '100%',
+            py: (theme) => theme.spacing(2),
+          }}
+          button
+          secondaryAction={<CustomChevronRight />}
+        >
+          <ListItemAvatar>
+            <Avatar style={{ color: '#7B61FF', background: '#7B61FF' }} />
+          </ListItemAvatar>
+          <div>
+            <CustomListItemText1
+              primaryTypographyProps={{
+                marginBottom: '-6px',
+                fontFamily: 'Roboto',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              }}
+            >
+              Project Finder
+            </CustomListItemText1>
+            <CustomListItemText2
+              primaryTypographyProps={{
+                fontFamily: 'Roboto',
+                fontSize: '14px',
+                fontWeight: 'medium',
+                color: alpha('#000000', 0.5),
+              }}
+            >
+              Вас лайкнул этот проект
+            </CustomListItemText2>
+          </div>
+        </ListItem>
+        <CustomDivider />
+        <ListItem
+          sx={{
+            width: '100%',
+            height: '100%',
+            py: (theme) => theme.spacing(2),
+          }}
+          button
+          secondaryAction={<CustomChevronRight />}
+        >
+          <ListItemAvatar>
+            <Avatar style={{ color: '#7B61FF', background: '#7B61FF' }} />
+          </ListItemAvatar>
+          <div>
+            <CustomListItemText1
+              primaryTypographyProps={{
+                marginBottom: '-6px',
+                fontFamily: 'Roboto',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              }}
+            >
+              Project Finder
+            </CustomListItemText1>
+            <CustomListItemText2
+              primaryTypographyProps={{
+                fontFamily: 'Roboto',
+                fontSize: '14px',
+                fontWeight: 'medium',
+                color: alpha('#000000', 0.5),
+              }}
+            >
+              Вы подходите для проекта
+            </CustomListItemText2>
+          </div>
+        </ListItem>
+        <CustomDivider />
+        <ListItem
+          sx={{
+            width: '100%',
+            height: '100%',
+            py: (theme) => theme.spacing(2),
+          }}
+          button
+          secondaryAction={<CustomChevronRight />}
+        >
+          <ListItemAvatar>
+            <Avatar style={{ color: '#7B61FF', background: '#7B61FF' }} />
+          </ListItemAvatar>
+          <div>
+            <CustomListItemText1
+              primaryTypographyProps={{
+                marginBottom: '-6px',
+                fontFamily: 'Roboto',
+                fontSize: '16px',
+                fontWeight: 'bold',
+              }}
+            >
+              Project Finder
+            </CustomListItemText1>
+            <CustomListItemText2
+              primaryTypographyProps={{
+                fontFamily: 'Roboto',
+                fontSize: '14px',
+                fontWeight: 'medium',
+                color: alpha('#000000', 0.5),
+              }}
+            >
+              Вы подходите для проекта
+            </CustomListItemText2>
+          </div>
+        </ListItem>
+        <CustomDivider />
+      </Box>
+    </List>
   )
 }
 
