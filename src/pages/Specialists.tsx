@@ -16,6 +16,8 @@ import Stack from 'src/components/blocks/Stack'
 import isMobile from 'is-mobile'
 import SpecialistCard from 'src/components/blocks/SpecialistCard'
 import getRandomSpecialistData from 'src/utils/getRandomSpecialistData'
+import SelectProject from 'src/components/blocks/SelectProject'
+import SelectedProjectTopbar from 'src/components/blocks/SelectedProjectTopbar'
 
 const Wrapper = styled(motion.div)`
   position: relative;
@@ -34,6 +36,7 @@ const Specialists = () => {
   const [items, setItems] = useState<unknown[]>(
     new Array(10).fill(0).map(() => getRandomSpecialistData())
   )
+  const [selectedProject, setSelectedProject] = useState<string>('')
   const x = useMotionValue(0)
   const xConstraints = [-MIN_SWIPE_WIDTH, 0, MIN_SWIPE_WIDTH]
   const background = useTransform(x, xConstraints, [
@@ -61,16 +64,33 @@ const Specialists = () => {
     })
   }
 
+  const selectProject = () => {
+    setSelectedProject('Project finder')
+  }
+
+  const openSelection = () => {
+    setSelectedProject('')
+  }
+
   return (
     <>
       <Wrapper style={{ background }}>
-        <Stack
-          CardComponent={SpecialistCard}
-          onTransformChange={handleTransformChange}
-          onVote={handleVote}
-          loadMoreFunction={loadMoreItems}
-          initialItems={items}
-        />
+        {!selectedProject && <SelectProject selectProject={selectProject} />}
+        {selectedProject && (
+          <>
+            <SelectedProjectTopbar
+              onClick={openSelection}
+              project={selectedProject}
+            />
+            <Stack
+              CardComponent={SpecialistCard}
+              onTransformChange={handleTransformChange}
+              onVote={handleVote}
+              loadMoreFunction={loadMoreItems}
+              initialItems={items}
+            />
+          </>
+        )}
       </Wrapper>
     </>
   )

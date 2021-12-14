@@ -1,5 +1,4 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
 import LoginSequence from 'src/pages/LoginSequence/index'
 import Notifications from 'src/pages/Notifications'
 import Profile from 'src/pages/Profile'
